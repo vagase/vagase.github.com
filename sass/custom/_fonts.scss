@@ -4,7 +4,10 @@
 
 //$sans: "Optima", sans-serif;
 //$serif: "Baskerville", serif;
-//$mono: "Courier", monospace;
-//$heading-font-family: "Verdana", sans-serif;
+$mono: Monaco,PragmataPro, Menlo, "Andale Mono", "Lucida Console", "Courier New", monospace !default;
+$heading-font-family: Helvetica, 'HelveticaNeue-CondensedBold','HelveticaNeue',Arial,sans-serif !default;
+
+$header-subtitle-font-family: 'HelveticaNeue-CondensedBold','HelveticaNeue',Helvetica,Arial,sans-serif !default;
+
 //$header-title-font-family: "Futura", sans-serif;
 //$header-subtitle-font-family: "Futura", sans-serif;
