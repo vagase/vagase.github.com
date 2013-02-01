@@ -1,22 +1,22 @@
 body > nav {
+  position: relative;
   background-color: $nav-bg;
   @include background($nav-bg-front, $nav-bg-back);
-  border: none; /*{
-    top: 1px solid $nav-border-top;
-    bottom: 1px solid $nav-border-bottom; }*/
+  padding-top: .35em;
+  padding-bottom: .35em;
   form {
     @include background-clip(padding-box);
     margin: 0; padding: 0;
     .search {
-      padding: .3em .5em .3em;
+      padding: .3em .5em 0;
       font-size: .85em;
-      @extend .sans;
+      font-family: $sans;
       line-height: 1.1em;
       width: 95%;
       @include border-radius(.5em);
       @include background-clip(padding-box);
       border: 1px solid $nav-border;
-      color: $text-color-light;
+      color: #888;
       &:focus {
         color: #444;
         border-color: #80b1df;
@@ -24,22 +24,32 @@ body > nav {
         background-color: #fff;
         outline: none;
       }
+      height:25px;
     }
+    padding-top: .7em;
   }
   fieldset[role=search]{ float: right; width: 48%; }
-  fieldset.mobile-nav{ float: left; width: 48%;
+  fieldset.mobile-nav{ float: right; width: 48%;
     select{ width: 100%; font-size: .8em; border: 1px solid #888;}
   }
   ul { display: none; }
+  @media only screen and (min-width: 550px) {
+    font-size: .9em;
     ul {
       list-style: none;
       float: left;
       display: block;
       margin-left: 1em;
-      padding-top: 1em;
+      padding-top: .6em;
+    }
+    ul.subscription {
+      margin-left: .8em;
+      float: right;
+      padding-top: .8em;
+
+      li:last-child a { padding-right: 0; }
     }
     ul li {
-      text-transform: uppercase;
       margin: 0;
     }
     a {
@@ -47,12 +57,9 @@ body > nav {
       font-family: $nav-font-family;
       float: left;
       text-decoration: none;
-      font-size: 1em;
-      padding: 0;
-      line-height: 1.55em;
-    }
-    @media only screen and (min-width: 768px) {
-  	  a { font-size: 1.25em; }
+      font-size: 1.2em;
+      padding: .1em 0;
+      line-height: 1.5em;
     }
     form {
       float: right;
@@ -71,9 +78,10 @@ body > nav {
     }
     fieldset.mobile-nav { display: none; }
     fieldset[role=search]{ width: 99%; }
+  }
   @media only screen and (min-width: 992px) {
     form {
-      width: $pad-wide - $sidebar-pad-wide*2 + 10px;
+      width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 + 10px;
     }
     ul[data-subscription$=email] + form {
       width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 - 58px;
@@ -82,6 +90,7 @@ body > nav {
 }
 .no-placeholder {
   body > nav .search {
+    text-indent: 1.3em;
   }
 }
 @mixin mask-subscription-nav($feed: 'rss.png'){
@@ -112,5 +121,7 @@ body > nav {
     }
   }
   ul.subscription { position: relative; top: .2em; li, a { border: 0; padding: 0; }}
+  a[rel=subscribe-rss]{ @include mask-subscription-nav('rss.png'); }
+  a[rel=subscribe-email]{ @include mask-subscription-nav('email.png'); }
 }
 
