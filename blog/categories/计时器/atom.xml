@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: 计时器 | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/计时器/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/计时器/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[如何自己动手做timer]]></title>
-    <link href="http://vagase.github.com/blog/how-to-make-timer"/>
+    <link href="http://vagase.me/blog/how-to-make-timer"/>
     <updated>2010-11-16T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/how-to-make-timer</id>
+    <id>http://vagase.me/blog/how-to-make-timer</id>
     <content type="html"><![CDATA[<p>有点标题党，最近在看开源游戏库<a href="http://www.libsdl.org">SDL</a>，只是因为要用到其中的thread和timer这些东西，所以就顺便看了看源代码，发现timer很精悍，所以分享其中的带代码。</p>
 
 <p>1.首先通过init函数创建一个timer自己的thread（暂且叫timer线程），所以在使用timer之前一点要先调用init函数。

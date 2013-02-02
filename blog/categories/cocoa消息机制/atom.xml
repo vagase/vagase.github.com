@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Cocoa消息机制 | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/cocoa消息机制/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/cocoa消息机制/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSRunLoop概述和原理]]></title>
-    <link href="http://vagase.github.com/blog/nsrunloop-in-deep"/>
+    <link href="http://vagase.me/blog/nsrunloop-in-deep"/>
     <updated>2010-12-12T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/nsrunloop-in-deep</id>
+    <id>http://vagase.me/blog/nsrunloop-in-deep</id>
     <content type="html"><![CDATA[<h2>1.什么是NSRunLoop？</h2>
 
 <p>我们会经常看到这样的代码：</p>

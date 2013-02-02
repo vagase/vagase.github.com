@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: UIAlertView | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/uialertview/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/uialertview/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[模仿UIAlertView，iOS模式对话框]]></title>
-    <link href="http://vagase.github.com/blog/fake-uialertview"/>
+    <link href="http://vagase.me/blog/fake-uialertview"/>
     <updated>2010-11-13T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/fake-uialertview</id>
+    <id>http://vagase.me/blog/fake-uialertview</id>
     <content type="html"><![CDATA[<p>在程序UI设计上，很多情况我们会需要一种模式的对话框来进行操作。现有的iOS提供如下方式满足这种需求:</p>
 
 <ul>

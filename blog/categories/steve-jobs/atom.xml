@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: steve jobs | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/steve-jobs/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/steve-jobs/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[乔布斯辞世]]></title>
-    <link href="http://vagase.github.com/blog/steve-jobs-forever"/>
+    <link href="http://vagase.me/blog/steve-jobs-forever"/>
     <updated>2011-10-06T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/steve-jobs-forever</id>
+    <id>http://vagase.me/blog/steve-jobs-forever</id>
     <content type="html"><![CDATA[<p>记住这一天 <code>10/5/2011</code>. 乔布斯永远离开了我们.</p>
 
 <p>iPhone 4S ( iPhone for Steve ) : Jobs在世留给我们最后的礼物。</p>
