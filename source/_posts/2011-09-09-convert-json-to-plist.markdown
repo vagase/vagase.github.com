@@ -22,6 +22,6 @@ JSON格式很好，但是可阅读性相对较差，而且在mac下也没有很�
 
 两者阅读效果对比截图如下：
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/jtop.png 400 300 %}
+{% img /myimages/jtop.png 400 300 %}
 
 Github地址：[https://github.com/vagase/jtop](https://github.com/vagase/jtop)

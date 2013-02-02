@@ -25,8 +25,8 @@ Dictionary是一个很牛B的东西，但是一直苦于Dictionary只能查看�
 
 效果图如下：
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/dictionary.png 400 400 %}
+{% img /myimages/dictionary.png 400 400 %}
 
 你可以选择Context Menu: Open Dictionary Panel 效果就是这样方便：
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/dictionary-panel.png 400 400 %}
+{% img /myimages/dictionary-panel.png 400 400 %}

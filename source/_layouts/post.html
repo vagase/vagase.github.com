@@ -9,8 +9,10 @@ sidebar: false
   {% include article.html %}
   <footer>
     <p class="meta">
+      {% comment %}
       {% include post/author.html %}
       {% include post/date.html %}{% if updated %}{{ updated }}{% else %}{{ time }}{% endif %}
+      {% endcomment %}
       {% include post/categories.html %}
     </p>
     {% unless page.sharing == false %}

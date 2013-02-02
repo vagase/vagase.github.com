@@ -37,7 +37,7 @@ comments: true
 
 所以整个UIAlertView 模仿过程完成了，效果如截图：
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/bydialog.png 400 400 %}
+{% img /myimages/bydialog.png 400 400 %}
 
 ---
 **Github: <https://github.com/vagase/BYDialog>**

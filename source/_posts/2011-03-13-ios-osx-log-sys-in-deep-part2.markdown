@@ -20,7 +20,7 @@ comments: true
 ###1.NSLog工作流程
 前面已经说过我们很多时候都只是讲NSLog当做是printf，比printf好就好在：1. 自动添加了换行符；2. 在信息头还添加了一些其他更易于阅读和标示的信息，如“2011-03-12 20:18:34.000 Test14[40871:903]”。但其实NSLog更重要的功能是Log功能。看了下面这幅图你也许久明白了NSLog的工作原理了。  
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/nslog.jpeg 400 400 %}  
+{% img /myimages/nslog.jpeg 400 400 %}  
 *NSLog工作流程图*  
 
 <!-- More -->
@@ -72,13 +72,13 @@ comments: true
 
 * 如果你的systemlog.conf配置正确，就可以直接去查看这个文件 `/private/var/log/system.log`
 * 打开`/Applications/Utilities/Console`这个程序，在Log List中选Console Messages就可以查看所有程序的NSLog打印出来的信息了。如图：  
-{% img center https://github.com/vagase/vagase.github.com/raw/source/resources/images/log-console-mac.png 400 400 %}  
+{% img center /myimages/log-console-mac.png 400 400 %}  
 如图所示，Console中也提供了查看system.log的快捷方式。这里可能对你造成困惑，为什么有了system.log还有一个Console Messages。其实说白了Console Messages只是讲system log 中facility为“com.apple.console”的都筛选出来了，所以你就姑且可以把Console Messages中的信息认识全部是NSLog产生的。但是其实如果你自己发送一个facility=“com.apple.console”的日志，同样会出现在Console Messages中。
 
 **iOS**  
 
 在真机上调试程序的时候打开Xcode 中的Oganizer, 然后在你当前的device下选取Console就可以看到这个Device的System Log了，如图。  
-{% img center https://github.com/vagase/vagase.github.com/raw/source/resources/images/log-console-ios.png 400 400 %}  
+{% img center /myimages/log-console-ios.png 400 400 %}  
 这里我用的是xcode 4，所以界面和你的也许会不一样。
 
 ###4. 程序员使用NSLog注意事项

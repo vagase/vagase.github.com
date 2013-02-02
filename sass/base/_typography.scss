@@ -35,8 +35,8 @@ body > header h2 {
 }
 
 body {
-  font-size: 1.125em;
-  line-height: 1.5em;
+  font-size: 1.25em;
+  line-height: 1.68em;
   color: $text-color;
   //text-shadow: #fff 0 1px 0;
   @extend .sans;
@@ -48,14 +48,14 @@ h1 {
 }
 
 @media only screen and (min-width: 768px) {
-  h1 { font-size: 2em; line-height: 1.2em; }
+  h1 { font-size: 2em; line-height: 1.5em; }
 }
 
 #{headings()}{
   @extend .heading;
-  text-rendering: optimizelegibility;
-  margin-bottom: 1em;
-  font-weight: 600;
+/*  text-rendering: optimizelegibility;
+*/  margin-bottom: 1em;
+  font-weight: bold;
   color: $header-color;
   a:hover { color: $header-link-color !important; }
 }

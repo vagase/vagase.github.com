@@ -40,4 +40,4 @@ NSLog(name)；
 
 但是如果你觉得你不需要xcode为你操这些心，方便才是王道的话，你可以在xcode里面将GCC 4.2-Warnings中的Typecheck Calls to printf/scanf选项去掉就可以解决问题：
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/nslog_type_check.png 400 400 %}
+{% img /myimages/nslog_type_check.png 400 400 %}

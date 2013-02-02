@@ -1,22 +1,22 @@
 body > nav {
-  position: relative;
   background-color: $nav-bg;
   @include background($nav-bg-front, $nav-bg-back);
-  padding-top: .35em;
-  padding-bottom: .35em;
+  border: none; /*{
+    top: 1px solid $nav-border-top;
+    bottom: 1px solid $nav-border-bottom; }*/
   form {
     @include background-clip(padding-box);
     margin: 0; padding: 0;
     .search {
-      padding: .3em .5em 0;
+      padding: .3em .5em .3em;
       font-size: .85em;
-      font-family: $sans;
+      @extend .sans;
       line-height: 1.1em;
       width: 95%;
       @include border-radius(.5em);
       @include background-clip(padding-box);
-      border: 1px solid $nav-border;
-      color: #888;
+      border: 2px solid $nav-border;
+      color: $text-color-light;
       &:focus {
         color: #444;
         border-color: #80b1df;
@@ -24,7 +24,6 @@ body > nav {
         background-color: #fff;
         outline: none;
       }
-      height:25px;
     }
     padding-top: .7em;
   }
@@ -34,22 +33,16 @@ body > nav {
   }
   ul { display: none; }
   @media only screen and (min-width: 550px) {
-    font-size: .9em;
     ul {
       list-style: none;
       float: left;
       display: block;
       margin-left: 1em;
-      padding-top: .6em;
+      padding-top: 1em;
     }
-    ul.subscription {
-      margin-left: .8em;
-      float: right;
-      padding-top: .8em;
 
-      li:last-child a { padding-right: 0; }
-    }
     ul li {
+      text-transform: uppercase;
       margin: 0;
     }
     a {
@@ -57,10 +50,20 @@ body > nav {
       font-family: $nav-font-family;
       float: left;
       text-decoration: none;
-      font-size: 1.2em;
-      padding: .1em 0;
-      line-height: 1.5em;
+      font-size: 1em;
+      padding: 0;
+      line-height: 1.55em;
     }
+      ul.subscription {
+        margin-left: .8em;
+        float: right;
+        padding-top: 1em;
+
+        li:last-child a { padding-right: 0; }
+      }      
+      a { font-size: 1.25em; }
+
+   
     form {
       float: right;
       text-align: left;
@@ -76,12 +79,14 @@ body > nav {
       width: $sidebar-width-medium - $pad-medium*2 - $sidebar-pad-medium - 58px;
       .search { width: 91%; }
     }
+
     fieldset.mobile-nav { display: none; }
     fieldset[role=search]{ width: 99%; }
   }
+
   @media only screen and (min-width: 992px) {
     form {
-      width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 + 10px;
+      width: $pad-wide - $sidebar-pad-wide*2 + 10px;
     }
     ul[data-subscription$=email] + form {
       width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 - 58px;
@@ -90,7 +95,6 @@ body > nav {
 }
 .no-placeholder {
   body > nav .search {
-    text-indent: 1.3em;
   }
 }
 @mixin mask-subscription-nav($feed: 'rss.png'){
@@ -122,6 +126,5 @@ body > nav {
   }
   ul.subscription { position: relative; top: .2em; li, a { border: 0; padding: 0; }}
   a[rel=subscribe-rss]{ @include mask-subscription-nav('rss.png'); }
-  a[rel=subscribe-email]{ @include mask-subscription-nav('email.png'); }
-}
 
+}

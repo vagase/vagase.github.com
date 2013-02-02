@@ -22,10 +22,10 @@ comments: true
 
 打开键盘的系统设置,点击modifier keys：
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/modifier_keys.png %}
+{% img /myimages/modifier_keys.png %}
 
 然后选择你要修改的键盘（笔记本会有默认键盘的）
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/modifier_keys_option.png %}
+{% img /myimages/modifier_keys_option.png %}
 
 大功告成！享受到了前所未有的快感！

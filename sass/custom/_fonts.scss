@@ -2,11 +2,11 @@
 // To give it a try, uncomment some of the lines below rebuild your blog, and see how it works. your sites's.
 // If you love to use Web Fonts, you also need to add some lines to source/_includes/custom/head.html
 
-//$sans: "Optima", sans-serif;
+$sans: 'PT Serif', Georgia, Times, 'Times New Roman', 'Songti SC', serif;
 //$serif: "Baskerville", serif;
 $mono: Monaco,PragmataPro, Menlo, "Andale Mono", "Lucida Console", "Courier New", monospace !default;
-$heading-font-family: Helvetica, 'HelveticaNeue-CondensedBold','HelveticaNeue',Arial,sans-serif !default;
-
+//$heading-font-family: Helvetica, 'HelveticaNeue-CondensedBold','HelveticaNeue',Arial,sans-serif !default;
+$heading-font-family:'Source Sans Pro', 'Helvetica Neue', Helvetica, 'Lantinghei SC', 'Kaiti SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 $header-subtitle-font-family: 'HelveticaNeue-CondensedBold','HelveticaNeue',Helvetica,Arial,sans-serif !default;
 
 //$header-title-font-family: "Futura", sans-serif;

@@ -13,4 +13,4 @@ comments: true
 
 iPhone 4S ( iPhone for Steve ) : Jobs在世留给我们最后的礼物。
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/steve_forever.png 400 400 %}
+{% img /myimages/steve_forever.png 400 400 %}

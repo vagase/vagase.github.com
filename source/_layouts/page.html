@@ -15,8 +15,10 @@ footer: false
   {% unless page.footer == false %}
     <footer>
       {% if page.date or page.author %}<p class="meta">
+        {% comment %}
         {% if page.author %}{% include post/author.html %}{% endif %}
         {% include post/date.html %}{% if updated %}{{ updated }}{% else %}{{ time }}{% endif %}
+        {% endcomment %}
         {% if page.categories %}{% include post/categories.html %}{% endif %}
       </p>{% endif %}
       {% unless page.sharing == false %}

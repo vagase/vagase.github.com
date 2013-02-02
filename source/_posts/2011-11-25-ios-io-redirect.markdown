@@ -78,4 +78,4 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOption{
 一旦通过printf或者NSLog写数据，因为重定向过，这些数据都会写到Pipe的写端。同时pipe会将这些数据从写端直接传送到读端。读端通过NSFileHandle的“监控”函数取出这些数据，并最终显示在uitextview上。
 
 ####截图：
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/io-redirect.png 300 400 %}
+{% img /myimages/io-redirect.png 300 400 %}

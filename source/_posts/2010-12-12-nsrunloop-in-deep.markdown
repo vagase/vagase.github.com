@@ -40,7 +40,7 @@ comments: true
 ##2. NSRunLoop工作原理
 接下来看一下NSRunLoop具体的工作原理，首先是官方文档提供的说法，看图： 
  
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/NSRunLoop-Infrastructure.png %}  
+{% img /myimages/NSRunLoop-Infrastructure.png %}  
 
 通过所有的“消息”都被添加到了NSRunLoop中去，而在这里这些消息并分为“input source”和“Timer source” 并在循环中检查是不是有事件需要发生，如果需要那么就调用相应的函数处理。为了更清晰的解释，我们来对比VC++和iOS消息处理过程。
 
@@ -70,6 +70,6 @@ int UIApplicationMain(...){
 
 所以在UIApplicationMain中也是同样在不断处理runloop才是的程序没有退出。刚才的我说了NSRunLoop是一种更加高明的消息处理模式，他就高明在对消息处理过程进行了更好的抽象和封装，这样才能是的你不用处理一些很琐碎很低层次的具体消息的处理，在NSRunLoop中每一个消息就被打包在input source或者是timer source中了，当需要处理的时候就直接调用其中包含的相应对象的处理函数了。所以对外部的开发人员来讲，你感受到的就是，把source/timer加入到runloop中，然后在适当的时候类似于[receiver action]这样的事情发生了。甚至很多时候，你都没有感受到整个过程前半部分，你只是感觉到了你的某个对象的某个函数调用了。比如在UIView被触摸时会用touchesBegan/touchesMoved等等函数被调用，也许你会想，“该死的，我都不知道在那里被告知有触摸消息，这些处理函数就被调用了！？”所以，消息是有的，只是runloop已经帮你做了！为了证明我的观点，我截取了一张debug touchesBegan的call stack，有图有真相：  
 
-{% img https://github.com/vagase/vagase.github.com/raw/source/resources/images/runloop-callstack.png %}
+{% img /myimages/runloop-callstack.png %}
 
 现在会过头来看看刚才的那个会“暂停”代码的例子，有没有更加深入的认识了呢？
