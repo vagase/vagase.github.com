@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: property | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/property/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/property/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSManagedObject property没有实例变量的模拟]]></title>
-    <link href="http://vagase.github.com/blog/nsmanagedobject-property-no-instance-variables-simulation"/>
+    <link href="http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation"/>
     <updated>2010-08-15T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/nsmanagedobject-property-no-instance-variables-simulation</id>
+    <id>http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation</id>
     <content type="html"><![CDATA[<p>趁现在还记忆犹新，而且还小有兴奋，把自己怎么实现RT话题写下来。</p>
 
 <p>这个问题其实是在我学习CoreData的时候就一直存在，在CoreData里面有一个“很酷”的类NSManagedObject，只要是找个类的子类，那么这些类的property只要申明并且在.m里面申明为dynamic就可以，而不需要为property指定特定的实力变量，用起来特别方便。这让我这个经常实用property的人觉得真的是匪夷所思啊。一直在想找个玩意儿到底是采用了什么魔法，才能够导致property和实力变量之间的依赖可以剥离。而且前段时间和Kevin同学一起讨论了一下，但是都表示没有头绪。</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: iOS | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/ios/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS IO 重定向（NSLog to UITextView）]]></title>
-    <link href="http://vagase.github.com/blog/ios-io-redirect"/>
+    <link href="http://vagase.me/blog/ios-io-redirect"/>
     <updated>2011-11-25T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/ios-io-redirect</id>
+    <id>http://vagase.me/blog/ios-io-redirect</id>
     <content type="html"><![CDATA[<h3>情形描述:</h3>
 
 <p>在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（<a href="http://octopress.dev/ios-osx-log-sys-in-deep-part1/">这里有NSLog详细描述</a>），你可以通过一定办法取出这个log。甚至可以写一套日志系统，然后将这些信息保存到日志中，然后导出或者上传自己的服务器。但是这些太麻烦了，简直是弱爆鸟。我们的目的是：在App里面能够直接像xCode console窗口那样显示NSLog的信息，准确的说是标准输出的信息。</p>
@@ -140,9 +140,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS and Mac OS 调试信息输出（二）]]></title>
-    <link href="http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part2"/>
+    <link href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part2"/>
     <updated>2011-03-13T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part2</id>
+    <id>http://vagase.me/blog/ios-osx-log-sys-in-deep-part2</id>
     <content type="html"><![CDATA[<h2>NSLog，没那么简单</h2>
 
 <p>在前一篇<a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">《iOS and Mac OS 调试信息输出（一）</a>中介绍了输出调试信息的方法。现在讲主角：<code>NSLog</code>。</p>
@@ -241,9 +241,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS and Mac OS 调试信息输出（一）]]></title>
-    <link href="http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1"/>
+    <link href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part1"/>
     <updated>2011-03-13T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1</id>
+    <id>http://vagase.me/blog/ios-osx-log-sys-in-deep-part1</id>
     <content type="html"><![CDATA[<h2>调试信息输出方法介绍</h2>
 
 <p>在Apple <a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">Tech Note TN2239：iOS Debugging Magic</a>中提到了程序开发中Debug output 方法：</p>
@@ -341,9 +341,9 @@
   
   <entry>
     <title type="html"><![CDATA[用NSZombieEnabled处理EXC_BAD_ACCESS]]></title>
-    <link href="http://vagase.github.com/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
+    <link href="http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
     <updated>2011-03-10T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
+    <id>http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
     <content type="html"><![CDATA[<p>一直有件很头痛的事情就是在debug程序的时候经常出现程序crash然后在console就只是打印了EXC_BAD_ACCESS, 完全不知道问题具体出在哪里。这种情况一看就知道是对象指针出了问题，很大部分时候都是因为再次使用了一个已经完全dealloc的object。对于console的这种不负责任的报错，大家都表示纷纷不给力。其实只要你google一下EXC_BAD_ACCESS，就会得到很多很多的解决方案，这里我搜集了很多我认为讲得不错的文章和大家分享。</p>
 
 <ul>
@@ -362,9 +362,9 @@
   
   <entry>
     <title type="html"><![CDATA[Timer不靠谱]]></title>
-    <link href="http://vagase.github.com/blog/timer-sucks"/>
+    <link href="http://vagase.me/blog/timer-sucks"/>
     <updated>2010-12-12T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/timer-sucks</id>
+    <id>http://vagase.me/blog/timer-sucks</id>
     <content type="html"><![CDATA[<p>有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。</p>
 
 <ul>

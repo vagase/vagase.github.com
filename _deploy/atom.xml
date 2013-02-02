@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[本]]></title>
-  <link href="http://vagase.github.com/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS IO 重定向（NSLog to UITextView）]]></title>
-    <link href="http://vagase.github.com/blog/ios-io-redirect"/>
+    <link href="http://vagase.me/blog/ios-io-redirect"/>
     <updated>2011-11-25T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/ios-io-redirect</id>
+    <id>http://vagase.me/blog/ios-io-redirect</id>
     <content type="html"><![CDATA[<h3>情形描述:</h3>
 
 <p>在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（<a href="http://octopress.dev/ios-osx-log-sys-in-deep-part1/">这里有NSLog详细描述</a>），你可以通过一定办法取出这个log。甚至可以写一套日志系统，然后将这些信息保存到日志中，然后导出或者上传自己的服务器。但是这些太麻烦了，简直是弱爆鸟。我们的目的是：在App里面能够直接像xCode console窗口那样显示NSLog的信息，准确的说是标准输出的信息。</p>
@@ -121,35 +121,35 @@
 
 <h4>截图：</h4>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/io-redirect.png"><img src="http://vagase.github.com/myimages/io-redirect.png" width="300" height="400"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/io-redirect.png"><img src="http://vagase.me/myimages/io-redirect.png" width="300" height="400"></a></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[乔布斯辞世]]></title>
-    <link href="http://vagase.github.com/blog/steve-jobs-forever"/>
+    <link href="http://vagase.me/blog/steve-jobs-forever"/>
     <updated>2011-10-06T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/steve-jobs-forever</id>
+    <id>http://vagase.me/blog/steve-jobs-forever</id>
     <content type="html"><![CDATA[<p>记住这一天 <code>10/5/2011</code>. 乔布斯永远离开了我们.</p>
 
 <p>iPhone 4S ( iPhone for Steve ) : Jobs在世留给我们最后的礼物。</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/steve_forever.png"><img src="http://vagase.github.com/myimages/steve_forever.png" width="400" height="400"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/steve_forever.png"><img src="http://vagase.me/myimages/steve_forever.png" width="400" height="400"></a></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[jtop - Convert JSON to Plist]]></title>
-    <link href="http://vagase.github.com/blog/convert-json-to-plist"/>
+    <link href="http://vagase.me/blog/convert-json-to-plist"/>
     <updated>2011-09-09T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/convert-json-to-plist</id>
+    <id>http://vagase.me/blog/convert-json-to-plist</id>
     <content type="html"><![CDATA[<p>JSON格式很好，但是可阅读性相对较差，而且在mac下也没有很好的专门针对JSON的编辑器，一般都用文本编辑器，所以看起来非常累。</p>
 
 <p>恰好，mac下的plist文件格式如果用系统自带的properties list editor（现在整合到Xcode4中了）打开阅读性非常好。于是自己写了一个小工具将JSON转换为plist文件输出。这样看起来就非常爽了～</p>
 
 <p>两者阅读效果对比截图如下：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/jtop.png"><img src="http://vagase.github.com/myimages/jtop.png" width="400" height="300"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/jtop.png"><img src="http://vagase.me/myimages/jtop.png" width="400" height="300"></a></p>
 
 <p>Github地址：<a href="https://github.com/vagase/jtop">https://github.com/vagase/jtop</a></p>
 ]]></content>
@@ -157,9 +157,9 @@
   
   <entry>
     <title type="html"><![CDATA[Objective-C Singleton template]]></title>
-    <link href="http://vagase.github.com/blog/objective-c-singleton-template"/>
+    <link href="http://vagase.me/blog/objective-c-singleton-template"/>
     <updated>2011-05-24T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/objective-c-singleton-template</id>
+    <id>http://vagase.me/blog/objective-c-singleton-template</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://blog.mugunthkumar.com/coding/objective-c-singleton-template-for-xcode-4/">http://blog.mugunthkumar.com/coding/objective-c-singleton-template-for-xcode-4/</a></p>
 
 <h4>_<strong>FILEBASENAME</strong>_.h</h4>
@@ -321,9 +321,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS and Mac OS 调试信息输出（二）]]></title>
-    <link href="http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part2"/>
+    <link href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part2"/>
     <updated>2011-03-13T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part2</id>
+    <id>http://vagase.me/blog/ios-osx-log-sys-in-deep-part2</id>
     <content type="html"><![CDATA[<h2>NSLog，没那么简单</h2>
 
 <p>在前一篇<a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">《iOS and Mac OS 调试信息输出（一）</a>中介绍了输出调试信息的方法。现在讲主角：<code>NSLog</code>。</p>
@@ -332,7 +332,7 @@
 
 <p>前面已经说过我们很多时候都只是讲NSLog当做是printf，比printf好就好在：1. 自动添加了换行符；2. 在信息头还添加了一些其他更易于阅读和标示的信息，如“2011-03-12 20:18:34.000 Test14[40871:903]”。但其实NSLog更重要的功能是Log功能。看了下面这幅图你也许久明白了NSLog的工作原理了。</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/nslog.jpeg"><img src="http://vagase.github.com/myimages/nslog.jpeg" width="400" height="400"></a><br/>
+<p><a class="fancybox" href="http://vagase.me/myimages/nslog.jpeg"><img src="http://vagase.me/myimages/nslog.jpeg" width="400" height="400"></a><br/>
 <em>NSLog工作流程图</em></p>
 
 <!-- More -->
@@ -409,7 +409,7 @@
 <ul>
 <li>如果你的systemlog.conf配置正确，就可以直接去查看这个文件 <code>/private/var/log/system.log</code></li>
 <li>打开<code>/Applications/Utilities/Console</code>这个程序，在Log List中选Console Messages就可以查看所有程序的NSLog打印出来的信息了。如图：<br/>
-<a class="fancybox" href="http://vagase.github.com/myimages/log-console-mac.png"><img class="center" src="http://vagase.github.com/myimages/log-console-mac.png" width="400" height="400"></a><br/>
+<a class="fancybox" href="http://vagase.me/myimages/log-console-mac.png"><img class="center" src="http://vagase.me/myimages/log-console-mac.png" width="400" height="400"></a><br/>
 如图所示，Console中也提供了查看system.log的快捷方式。这里可能对你造成困惑，为什么有了system.log还有一个Console Messages。其实说白了Console Messages只是讲system log 中facility为“com.apple.console”的都筛选出来了，所以你就姑且可以把Console Messages中的信息认识全部是NSLog产生的。但是其实如果你自己发送一个facility=“com.apple.console”的日志，同样会出现在Console Messages中。</li>
 </ul>
 
@@ -417,7 +417,7 @@
 <p><strong>iOS</strong></p>
 
 <p>在真机上调试程序的时候打开Xcode 中的Oganizer, 然后在你当前的device下选取Console就可以看到这个Device的System Log了，如图。<br/>
-<a class="fancybox" href="http://vagase.github.com/myimages/log-console-ios.png"><img class="center" src="http://vagase.github.com/myimages/log-console-ios.png" width="400" height="400"></a><br/>
+<a class="fancybox" href="http://vagase.me/myimages/log-console-ios.png"><img class="center" src="http://vagase.me/myimages/log-console-ios.png" width="400" height="400"></a><br/>
 这里我用的是xcode 4，所以界面和你的也许会不一样。</p>
 
 <h3>4. 程序员使用NSLog注意事项</h3>
@@ -438,9 +438,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS and Mac OS 调试信息输出（一）]]></title>
-    <link href="http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1"/>
+    <link href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part1"/>
     <updated>2011-03-13T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1</id>
+    <id>http://vagase.me/blog/ios-osx-log-sys-in-deep-part1</id>
     <content type="html"><![CDATA[<h2>调试信息输出方法介绍</h2>
 
 <p>在Apple <a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">Tech Note TN2239：iOS Debugging Magic</a>中提到了程序开发中Debug output 方法：</p>
@@ -538,9 +538,9 @@
   
   <entry>
     <title type="html"><![CDATA[用NSZombieEnabled处理EXC_BAD_ACCESS]]></title>
-    <link href="http://vagase.github.com/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
+    <link href="http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
     <updated>2011-03-10T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
+    <id>http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
     <content type="html"><![CDATA[<p>一直有件很头痛的事情就是在debug程序的时候经常出现程序crash然后在console就只是打印了EXC_BAD_ACCESS, 完全不知道问题具体出在哪里。这种情况一看就知道是对象指针出了问题，很大部分时候都是因为再次使用了一个已经完全dealloc的object。对于console的这种不负责任的报错，大家都表示纷纷不给力。其实只要你google一下EXC_BAD_ACCESS，就会得到很多很多的解决方案，这里我搜集了很多我认为讲得不错的文章和大家分享。</p>
 
 <ul>
@@ -559,9 +559,9 @@
   
   <entry>
     <title type="html"><![CDATA[为Mac Dictionary添加中英文翻译傻瓜教程]]></title>
-    <link href="http://vagase.github.com/blog/add-custom-dict-for-mac"/>
+    <link href="http://vagase.me/blog/add-custom-dict-for-mac"/>
     <updated>2011-01-28T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/add-custom-dict-for-mac</id>
+    <id>http://vagase.me/blog/add-custom-dict-for-mac</id>
     <content type="html"><![CDATA[<p>Dictionary是一个很牛B的东西，但是一直苦于Dictionary只能查看系统自带英文翻译和wiki等等，所以也就一直在用金山辞霸。金山词霸for mac的用户体验你懂的。。。为此一直很内伤。。。</p>
 
 <p>今天google了一把，原来Dictionary是可以添加额外的词典库的。按需添加好很牛B的词典库之后就可以完全抛弃金山词霸了！具体步骤如下：</p>
@@ -579,19 +579,19 @@
 
 <p>效果图如下：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/dictionary.png"><img src="http://vagase.github.com/myimages/dictionary.png" width="400" height="400"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/dictionary.png"><img src="http://vagase.me/myimages/dictionary.png" width="400" height="400"></a></p>
 
 <p>你可以选择Context Menu: Open Dictionary Panel 效果就是这样方便：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/dictionary-panel.png"><img src="http://vagase.github.com/myimages/dictionary-panel.png" width="400" height="400"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/dictionary-panel.png"><img src="http://vagase.me/myimages/dictionary-panel.png" width="400" height="400"></a></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Timer不靠谱]]></title>
-    <link href="http://vagase.github.com/blog/timer-sucks"/>
+    <link href="http://vagase.me/blog/timer-sucks"/>
     <updated>2010-12-12T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/timer-sucks</id>
+    <id>http://vagase.me/blog/timer-sucks</id>
     <content type="html"><![CDATA[<p>有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。</p>
 
 <ul>
@@ -630,9 +630,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSRunLoop概述和原理]]></title>
-    <link href="http://vagase.github.com/blog/nsrunloop-in-deep"/>
+    <link href="http://vagase.me/blog/nsrunloop-in-deep"/>
     <updated>2010-12-12T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/nsrunloop-in-deep</id>
+    <id>http://vagase.me/blog/nsrunloop-in-deep</id>
     <content type="html"><![CDATA[<h2>1.什么是NSRunLoop？</h2>
 
 <p>我们会经常看到这样的代码：</p>
@@ -671,7 +671,7 @@
 
 <p>接下来看一下NSRunLoop具体的工作原理，首先是官方文档提供的说法，看图：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/NSRunLoop-Infrastructure.png"><img src="http://vagase.github.com/myimages/NSRunLoop-Infrastructure.png"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/NSRunLoop-Infrastructure.png"><img src="http://vagase.me/myimages/NSRunLoop-Infrastructure.png"></a></p>
 
 <p>通过所有的“消息”都被添加到了NSRunLoop中去，而在这里这些消息并分为“input source”和“Timer source” 并在循环中检查是不是有事件需要发生，如果需要那么就调用相应的函数处理。为了更清晰的解释，我们来对比VC++和iOS消息处理过程。</p>
 
@@ -719,7 +719,7 @@
 
 <p>所以在UIApplicationMain中也是同样在不断处理runloop才是的程序没有退出。刚才的我说了NSRunLoop是一种更加高明的消息处理模式，他就高明在对消息处理过程进行了更好的抽象和封装，这样才能是的你不用处理一些很琐碎很低层次的具体消息的处理，在NSRunLoop中每一个消息就被打包在input source或者是timer source中了，当需要处理的时候就直接调用其中包含的相应对象的处理函数了。所以对外部的开发人员来讲，你感受到的就是，把source/timer加入到runloop中，然后在适当的时候类似于[receiver action]这样的事情发生了。甚至很多时候，你都没有感受到整个过程前半部分，你只是感觉到了你的某个对象的某个函数调用了。比如在UIView被触摸时会用touchesBegan/touchesMoved等等函数被调用，也许你会想，“该死的，我都不知道在那里被告知有触摸消息，这些处理函数就被调用了！？”所以，消息是有的，只是runloop已经帮你做了！为了证明我的观点，我截取了一张debug touchesBegan的call stack，有图有真相：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/runloop-callstack.png"><img src="http://vagase.github.com/myimages/runloop-callstack.png"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/runloop-callstack.png"><img src="http://vagase.me/myimages/runloop-callstack.png"></a></p>
 
 <p>现在会过头来看看刚才的那个会“暂停”代码的例子，有没有更加深入的认识了呢？</p>
 ]]></content>
@@ -727,9 +727,9 @@
   
   <entry>
     <title type="html"><![CDATA[如何自己动手做timer]]></title>
-    <link href="http://vagase.github.com/blog/how-to-make-timer"/>
+    <link href="http://vagase.me/blog/how-to-make-timer"/>
     <updated>2010-11-16T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/how-to-make-timer</id>
+    <id>http://vagase.me/blog/how-to-make-timer</id>
     <content type="html"><![CDATA[<p>有点标题党，最近在看开源游戏库<a href="http://www.libsdl.org">SDL</a>，只是因为要用到其中的thread和timer这些东西，所以就顺便看了看源代码，发现timer很精悍，所以分享其中的带代码。</p>
 
 <p>1.首先通过init函数创建一个timer自己的thread（暂且叫timer线程），所以在使用timer之前一点要先调用init函数。</p>
@@ -955,9 +955,9 @@
   
   <entry>
     <title type="html"><![CDATA[模仿UIAlertView，iOS模式对话框]]></title>
-    <link href="http://vagase.github.com/blog/fake-uialertview"/>
+    <link href="http://vagase.me/blog/fake-uialertview"/>
     <updated>2010-11-13T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/fake-uialertview</id>
+    <id>http://vagase.me/blog/fake-uialertview</id>
     <content type="html"><![CDATA[<p>在程序UI设计上，很多情况我们会需要一种模式的对话框来进行操作。现有的iOS提供如下方式满足这种需求:</p>
 
 <ul>
@@ -993,7 +993,7 @@
 
 <p>所以整个UIAlertView 模仿过程完成了，效果如截图：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/bydialog.png"><img src="http://vagase.github.com/myimages/bydialog.png" width="400" height="400"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/bydialog.png"><img src="http://vagase.me/myimages/bydialog.png" width="400" height="400"></a></p>
 
 <hr />
 
@@ -1003,9 +1003,9 @@
   
   <entry>
     <title type="html"><![CDATA[PC键盘在Mac下Command/Option键切换]]></title>
-    <link href="http://vagase.github.com/blog/pc-keyboard-switch-command-option-kyes-on-mac"/>
+    <link href="http://vagase.me/blog/pc-keyboard-switch-command-option-kyes-on-mac"/>
     <updated>2010-08-18T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/pc-keyboard-switch-command-option-kyes-on-mac</id>
+    <id>http://vagase.me/blog/pc-keyboard-switch-command-option-kyes-on-mac</id>
     <content type="html"><![CDATA[<p>一直以来有这么一种烦恼困扰着我，那就是把pc键盘和mac的兼容性。我之所以喜欢用mac，有很大一个原因是因为mac的commad键位设置得很舒服，每次复制粘贴手不用移动很大位置（不像windows），这个对一个程序员是很重要的。但是每当插上一个windows外界键盘的时候，win键默认为command，而alt默认是option，这就搞得command键位不是很舒服了，作为一个穷学生，又买不起mac外接键盘，只能这样默默地忍受着这种不和谐，心里默默流泪。</p>
 
 <!-- More -->
@@ -1015,11 +1015,11 @@
 
 <p>打开键盘的系统设置,点击modifier keys：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/modifier_keys.png"><img src="http://vagase.github.com/myimages/modifier_keys.png"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/modifier_keys.png"><img src="http://vagase.me/myimages/modifier_keys.png"></a></p>
 
 <p>然后选择你要修改的键盘（笔记本会有默认键盘的）</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/modifier_keys_option.png"><img src="http://vagase.github.com/myimages/modifier_keys_option.png"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/modifier_keys_option.png"><img src="http://vagase.me/myimages/modifier_keys_option.png"></a></p>
 
 <p>大功告成！享受到了前所未有的快感！</p>
 ]]></content>
@@ -1027,9 +1027,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSManagedObject property没有实例变量的模拟]]></title>
-    <link href="http://vagase.github.com/blog/nsmanagedobject-property-no-instance-variables-simulation"/>
+    <link href="http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation"/>
     <updated>2010-08-15T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/nsmanagedobject-property-no-instance-variables-simulation</id>
+    <id>http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation</id>
     <content type="html"><![CDATA[<p>趁现在还记忆犹新，而且还小有兴奋，把自己怎么实现RT话题写下来。</p>
 
 <p>这个问题其实是在我学习CoreData的时候就一直存在，在CoreData里面有一个“很酷”的类NSManagedObject，只要是找个类的子类，那么这些类的property只要申明并且在.m里面申明为dynamic就可以，而不需要为property指定特定的实力变量，用起来特别方便。这让我这个经常实用property的人觉得真的是匪夷所思啊。一直在想找个玩意儿到底是采用了什么魔法，才能够导致property和实力变量之间的依赖可以剥离。而且前段时间和Kevin同学一起讨论了一下，但是都表示没有头绪。</p>
@@ -1110,9 +1110,9 @@
   
   <entry>
     <title type="html"><![CDATA[UIView创建不规则视图]]></title>
-    <link href="http://vagase.github.com/blog/uiview-with-non-rect-shape"/>
+    <link href="http://vagase.me/blog/uiview-with-non-rect-shape"/>
     <updated>2010-08-06T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/uiview-with-non-rect-shape</id>
+    <id>http://vagase.me/blog/uiview-with-non-rect-shape</id>
     <content type="html"><![CDATA[<p>总所周知，UIView都是方形的，并不能产生一个不规则的形状的view（小弟才疏学浅，目前确实没有发现能够创建真实不规则视图的方法，如果有，不吝赐教，感激涕零！）。为什么我们有创建不规则view的需求？如果只是为了在View上显示不规则图形那大可不必，直接讲不规则图形添加到view上，然后讲view的backgroundColor设置为UIColor clearColor就可以；但是之所以有这样的需求，很大部分就是为了判断不规则的图形去响应触摸事件，判断图形是否被触摸选中了这样的要求，我们最直接的想法就是每个不规则图形都是一个view，那么图形是否选中就可以通过UIResponder的那一系列触摸有关的响应函数得知了，所以这个时候我们就需要不规则的view。但是显示的杯具是，iOS并没有提供这样的不规则view，如果要完成刚才的需求，就只能手动判断触摸的点是否在不规则图形里面了，这有的时候将是一件比较痛苦的事情。那么现在提供一种“创建不规则view”的解决方案：</p>
 
 <p>不知道大家有没有注意到UIView有这样一个函数：<code>- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event</code> 这个函数就是用来判断指定的点是否在View内，我们方法就是在这个函数中，如果point在指定的不规则图形内返回YES，反之就返回NO。这样不规则图形的bounds就相当于代表了view自己的bounds。这样当你触摸view的时候，当且只有当触摸到指定图形内才会使得view被触摸到，才会调用到UIResponder一系列触摸响应事件。</p>
@@ -1319,9 +1319,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSLog warning:"format not a string literal and no format arguments"]]></title>
-    <link href="http://vagase.github.com/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments"/>
+    <link href="http://vagase.me/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments"/>
     <updated>2010-07-15T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments</id>
+    <id>http://vagase.me/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments</id>
     <content type="html"><![CDATA[<p>我觉得这个问题已经烦躁了我很久很久，因为自打我学习Objective c的时候，写这样一句是没有任何问题的：</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1360,15 +1360,15 @@
 
 <p>但是如果你觉得你不需要xcode为你操这些心，方便才是王道的话，你可以在xcode里面将GCC 4.2-Warnings中的Typecheck Calls to printf/scanf选项去掉就可以解决问题：</p>
 
-<p><a class="fancybox" href="http://vagase.github.com/myimages/nslog_type_check.png"><img src="http://vagase.github.com/myimages/nslog_type_check.png" width="400" height="400"></a></p>
+<p><a class="fancybox" href="http://vagase.me/myimages/nslog_type_check.png"><img src="http://vagase.me/myimages/nslog_type_check.png" width="400" height="400"></a></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[NSURLConnection timeout失效问题]]></title>
-    <link href="http://vagase.github.com/blog/nsurlconnection-timeout-issue"/>
+    <link href="http://vagase.me/blog/nsurlconnection-timeout-issue"/>
     <updated>2010-05-20T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/nsurlconnection-timeout-issue</id>
+    <id>http://vagase.me/blog/nsurlconnection-timeout-issue</id>
     <content type="html"><![CDATA[<p>今天在编译3.0的程序时候无意中写了这么一段代码：</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1420,9 +1420,9 @@
   
   <entry>
     <title type="html"><![CDATA[Core Animation硬件加速切身体验]]></title>
-    <link href="http://vagase.github.com/blog/core-animation-hardware-acceleration"/>
+    <link href="http://vagase.me/blog/core-animation-hardware-acceleration"/>
     <updated>2010-05-15T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/core-animation-hardware-acceleration</id>
+    <id>http://vagase.me/blog/core-animation-hardware-acceleration</id>
     <content type="html"><![CDATA[<p>一直以来对Core Animation的理解都只是停留在这个技术是用来做动画的。通过CA为什么会得到流畅的动画效果，那是因为Core Animation是提供硬件加速的。然后，就没有然后了。</p>
 
 <p>因为毕设的一部分是做一个iPhone的视频播放器，当然渲染解码出来的数据就是一个问题了。最先用很粗糙的UIImageView通过setImage的方式来呈现每一帧的数据。额的个天啊，虽然视频是播放出来了，但是明显有很卡的感觉！而且如果UIImageView越大，那么越卡，也就是渲染一张图片的时间越长。于是就想到了最坏的打算：用OPENGL来渲染。但是本人一向对非navtive sdk的开发比较反感，因为和系统打交道比较麻烦，所以这只是最坏的打算。于是有投奔CALayer，通过CAlayer的contents来渲染每一帧，结果效果大让人满意，渲染每一帧所花的时间基本上是同UIImageView所需时间的<strong>60%</strong>左右！播放那是非常流畅！</p>

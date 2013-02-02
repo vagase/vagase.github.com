@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: SDL_Timer | 本]]></title>
-  <link href="http://vagase.github.com/blog/categories/sdl-timer/atom.xml" rel="self"/>
-  <link href="http://vagase.github.com/"/>
-  <updated>2013-02-02T15:09:48+08:00</updated>
-  <id>http://vagase.github.com/</id>
+  <link href="http://vagase.me/blog/categories/sdl-timer/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T15:48:32+08:00</updated>
+  <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Timer不靠谱]]></title>
-    <link href="http://vagase.github.com/blog/timer-sucks"/>
+    <link href="http://vagase.me/blog/timer-sucks"/>
     <updated>2010-12-12T00:00:00+08:00</updated>
-    <id>http://vagase.github.com/blog/timer-sucks</id>
+    <id>http://vagase.me/blog/timer-sucks</id>
     <content type="html"><![CDATA[<p>有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。</p>
 
 <ul>

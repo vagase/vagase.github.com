@@ -15,7 +15,7 @@ body > nav {
       width: 95%;
       @include border-radius(.5em);
       @include background-clip(padding-box);
-      border: 2px solid $nav-border;
+      border: 1px solid $nav-border;
       color: $text-color-light;
       &:focus {
         color: #444;
@@ -58,10 +58,18 @@ body > nav {
         margin-left: .8em;
         float: right;
         padding-top: 1em;
-
+        color: $text-color-light;
         li:last-child a { padding-right: 0; }
-      }      
-      a { font-size: 1.25em; }
+        a {
+        font-size: 1em; 
+        color: $text-color-light;
+        }   
+
+      }   
+      a {
+        font-size: 1.25em; 
+        color: $text-color-light;
+      }   
 
    
     form {
@@ -118,13 +126,7 @@ body > nav {
         width: $sidebar-width-medium - $pad-medium*2 - $sidebar-pad-medium - 32px;
       }
     }
-    @media only screen and (min-width: 992px) {
-      ul[data-subscription$=email] + form {
-        width: $sidebar-width-wide - $pad-wide - $sidebar-pad-wide*2 - 32px;
-      }
-    }
   }
   ul.subscription { position: relative; top: .2em; li, a { border: 0; padding: 0; }}
   a[rel=subscribe-rss]{ @include mask-subscription-nav('rss.png'); }
-
 }
