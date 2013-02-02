@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: output | 本]]></title>
+  <link href="http://vagase.me/blog/categories/output/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T12:01:42+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS and Mac OS 调试信息输出（一）]]></title>
+    <link href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part1"/>
+    <updated>2011-03-13T00:00:00+08:00</updated>
+    <id>http://vagase.me/blog/ios-osx-log-sys-in-deep-part1</id>
+    <content type="html"><![CDATA[<h2>调试信息输出方法介绍</h2>
+
+<p>在Apple <a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">Tech Note TN2239：iOS Debugging Magic</a>中提到了程序开发中Debug output 方法：</p>
+
+<ol>
+<li>NSLog</li>
+<li>stderr</li>
+<li>system log</li>
+</ol>
+
+
+<p>调试信息的输出主要有方式，一是通过输出到终端输出，二是输出到日志系统。下面讲介绍一下这几种输出调试信息的方式，首先从stderr说起。</p>
+
+<h4>1. stderr （引用自TN2239）</h4>
+
+<blockquote><p>Many programs, and indeed many system frameworks, print debugging messages to stderr. The destination for this output is ultimately controlled by the program: it can redirect stderr to whatever destination it chooses. However, in most cases a program does not redirect stderr, so the output goes to the default destination inherited by the program from its launch environment. This is typically one of the following:</p></blockquote>
+
+<!-- More -->
+
+
+<blockquote><ol>
+<li><p>If you launch a GUI application as it would be launched by a normal user, the system redirects any messages printed on stderr to the system log. You can view these messages using the techniques described earlier.</p></li>
+<li><p>If you run a program from within Xcode, you can see its stderr output in Xcode's debugger Console window (choose the Console menu item from the Run menu to see this window).</p></li>
+</ol>
+
+
+<p>Attaching to a running program (using Xcode's Attach to Process menu, or the attach command in GDB) does not automatically connect the program's stderr to your GDB window. You can do this from within GDB using the trick described in the "Seeing stdout and stderr After Attaching" section of Technical Note <a href="http://developer.apple.com/technotes/tn/tn2030.html">TN2030</a>, 'GDB for MacsBug Veterans'.</p></blockquote>
+
+<p>这样一段代码在真机上跑：</p>
+
+<p><code>NSLog(@"This is message from NSLog");</code><br/>
+<code>fprintf(stderr, "This is message from stderr\n");</code></p>
+
+<p>1）如果是通过Xcode调试加载运行这个程序，那么</p>
+
+<p>在xcode的console中打印如下： <br/>
+<code>2011-03-12 18:52:26.948 Test86[7891:307] This is message from NSLog</code><br/>
+<code>This is message from stderr</code><br/>
+在iPhone的system log中（通过Organizer的console查看）只打印:<br/>
+<code>Sat Mar 12 18:52:26 unknown Test86[7891] &amp;lt;Warning&amp;gt;: This is message from NSLog</code></p>
+
+<p>2）但是如果在iPhone上通过手指触摸启动这个程序，在iPhone的system log中会打印：<br/>
+<code>Sat Mar 12 18:53:38 unknown Test86[7900] &amp;lt;Warning&amp;gt;: This is message from NSLog</code><br/>
+<code>Sat Mar 12 18:53:38 unknown UIKitApplication:com.yourcompany.Test86[0x7d60][7900] &amp;lt;Notice&amp;gt;: This is message from stderr</code></p>
+
+<p>说明确实stderr在user 自己launch的app中被重定向为system log，而且log的等级为Notice；NSLog的等级为Warning。</p>
+
+<h4>2. system log</h4>
+
+<p>其实system log是unix系统都有采用syslog协议的一个日志系统（<a href="http://tools.ietf.org/html/rfc5424">RFC详细讲解了这种协议</a>）。<br/>
+每条日志是有等级的，主要分为如下等级：</p>
+
+<ul>
+<li>Level 0 – “Emergency”</li>
+<li>Level 1 – “Alert”</li>
+<li>Level 2 – “Critical”</li>
+<li>Level 3 – “Error”</li>
+<li>Level 4 – “Warning”</li>
+<li>Level 5 – “Notice”</li>
+<li>Level 6 – “Info”</li>
+<li>Level 7 – “Debug”</li>
+</ul>
+
+
+<p>在创建好日志之后，通过调用API发送日志信息给一个叫做syslogd的守护进程，然后syslogd根据自己的配置文件（位于<code>/private/etc/syslog.conf</code>, <a href="http://study.chyangwa.com/IT/AIX/aixcmds5/syslogd.htm">具体怎么配置这篇文章说得很详细</a>），最后讲日志保存早自己的系统日志“数据库”里面。有兴趣的可以去打卡这个syslog.conf文件看看，我Mac上的配置文件是这样的：</p>
+
+<p><code>*.notice;authpriv,remoteauth,ftp,install,internal.none     /var/log/system.log</code>（此处省去若干字。。。）</p>
+
+<p>其中<code>*.notice</code>指明了任何等级比notice高的等级都要录入到 <code>/var/log/system.log</code> 这个文件中去。</p>
+
+<p>在mac os和ios那么怎样调用  API讲日志发送给系统日志呢？有两种API：</p>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/syslog.3.html#//apple_ref/doc/man/3/syslog">syslog API（不要和之前syslog协议混淆</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/asl.3.html">ASL: Apple System Log facility</a> 是苹果自己实现的一种可以同syslogd服务器交互，用来替换syslog API的实现。</li>
+</ul>
+
+
+<p>这里还有一些讲Syslog不错的文章,：</p>
+
+<ul>
+<li><a href="http://www.cocoanetics.com/2011/03/accessing-the-ios-system-log/">"Accesing the iOS system log"</a></li>
+</ul>
+
+
+<h4>3. NSLog</h4>
+
+<p>NSLog应该是我们最熟悉的方式，其实也应该是每一个学习Objective C第一句会的语法，然后你对它真正了解多少？NSLog顾名思义，出去namespace NS 就是Log，其主要的功能就是为Cocoa程序编写人员提供一种简单的输入日志的方式。但是我们很多时候都讲其误认为是printf，而且也只是当printf用。如果是这样就太可惜了。</p>
+
+<blockquote><p>NSLog is a high-level API for logging which is used extensively by Objective-C code. The exact behaviour of NSLog is surprisingly complex, and has changed significantly over time, making it beyond the scope of this document. However, it's sufficient to know that NSLog prints to stderr, or logs to the system log, or both. So, if you understand those two mechanisms, you can see anything logged via NSLog.<a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">TN2239</a></p></blockquote>
+
+<p>看见这个surprisingly complex也许就知道NSLog也许没那么简单了，我讲在另外一篇文章中详细讲解NSLog, <a href="http://vagase.github.com/2011/03/13/ios-osx-log-sys-in-deep-part2/">《iOS/Mac OS 调试信息输出（二）之 NSLog没那么简单》</a>。</p>
+]]></content>
+  </entry>
+  
+</feed>

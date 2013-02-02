@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: NSZombieEnabled | 本]]></title>
+  <link href="http://vagase.me/blog/categories/nszombieenabled/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T12:01:42+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[用NSZombieEnabled处理EXC_BAD_ACCESS]]></title>
+    <link href="http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
+    <updated>2011-03-10T00:00:00+08:00</updated>
+    <id>http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
+    <content type="html"><![CDATA[<p>一直有件很头痛的事情就是在debug程序的时候经常出现程序crash然后在console就只是打印了EXC_BAD_ACCESS, 完全不知道问题具体出在哪里。这种情况一看就知道是对象指针出了问题，很大部分时候都是因为再次使用了一个已经完全dealloc的object。对于console的这种不负责任的报错，大家都表示纷纷不给力。其实只要你google一下EXC_BAD_ACCESS，就会得到很多很多的解决方案，这里我搜集了很多我认为讲得不错的文章和大家分享。</p>
+
+<ul>
+<li>CocoaDev，个人觉得讲Cocoa技术十分专业的网站之一，下面的链接详细讲了讲NSZombieEnable的原理。
+  <a href="http://www.cocoadev.com/index.pl?NSZombieEnabled">http://www.cocoadev.com/index.pl?NSZombieEnabled</a></li>
+<li>苹果官方的Mac OS X Debugging Magic, 详细讲述了最为一个高级苹果程序员应该具备的调试技巧。
+  <a href="http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html">http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html</a></li>
+<li>其实还可以在Instruments中开启NSZombie选项，这样就可以在Instruments中直接查看crash时候的call stack了。
+  <a href="http://www.markj.net/iphone-memory-debug-nszombie/">http://www.markj.net/iphone-memory-debug-nszombie/</a></li>
+</ul>
+
+
+<p>最后提醒NSZombieEnabled只能在调试的时候使用，千万不要忘记在产品发布的时候去掉，因为NSZombieEnabled不会真正去释放dealloc对象的内存，一直开启后果可想而知，自重！</p>
+]]></content>
+  </entry>
+  
+</feed>

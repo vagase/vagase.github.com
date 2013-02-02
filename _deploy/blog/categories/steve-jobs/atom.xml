@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: steve jobs | 本]]></title>
+  <link href="http://vagase.me/blog/categories/steve-jobs/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T12:01:42+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[乔布斯辞世]]></title>
+    <link href="http://vagase.me/blog/steve-jobs-forever"/>
+    <updated>2011-10-06T00:00:00+08:00</updated>
+    <id>http://vagase.me/blog/steve-jobs-forever</id>
+    <content type="html"><![CDATA[<p>记住这一天 <code>10/5/2011</code>. 乔布斯永远离开了我们.</p>
+
+<p>iPhone 4S ( iPhone for Steve ) : Jobs在世留给我们最后的礼物。</p>
+
+<p><img src="/myimages/steve_forever.png" width="400" height="400"></p>
+]]></content>
+  </entry>
+  
+</feed>

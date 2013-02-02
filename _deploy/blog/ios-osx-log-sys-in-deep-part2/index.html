@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS and Mac OS 调试信息输出（二） - 本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="NSLog，没那么简单 在前一篇《iOS and Mac OS 调试信息输出（一）中介绍了输出调试信息的方法。现在讲主角：NSLog。 1.NSLog工作流程 前面已经说过我们很多时候都只是讲NSLog当做是printf，比printf好就好在：1. 自动添加了换行符；2. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part2">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iOS and Mac OS 调试信息输出（二）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-13T00:00:00+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>NSLog，没那么简单</h2>
+
+<p>在前一篇<a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">《iOS and Mac OS 调试信息输出（一）</a>中介绍了输出调试信息的方法。现在讲主角：<code>NSLog</code>。</p>
+
+<h3>1.NSLog工作流程</h3>
+
+<p>前面已经说过我们很多时候都只是讲NSLog当做是printf，比printf好就好在：1. 自动添加了换行符；2. 在信息头还添加了一些其他更易于阅读和标示的信息，如“2011-03-12 20:18:34.000 Test14[40871:903]”。但其实NSLog更重要的功能是Log功能。看了下面这幅图你也许久明白了NSLog的工作原理了。</p>
+
+<p><img src="/myimages/nslog.jpeg" width="400" height="400"><br/>
+<em>NSLog工作流程图</em></p>
+
+<!-- More -->
+
+
+<p>所以从图中可以看出NSLog的工作主要是分为：</p>
+
+<ol>
+<li>输出信息到终端</li>
+<li>输出信息到System Log中去</li>
+</ol>
+
+
+<p>一般开发的时候程序都是从Xcode中启动，所以这个时候NSLog就具有打印信息到终端的能力就像printf一样（说fprintf(stderr, ….) 更合适一点）。而且很自然也就认为NSLog只是用来打印这些调试信息用的。</p>
+
+<p>但是当程序不是从xcode或者ternimal启动等时，因为stderr不是被定向到标准终端这个时候NSLog的功能就是把信息输入到System Log中去。如果这个时候你也用的stderr输入信息，这个时候stderr会被定向到System Log中去。</p>
+
+<h3>2. Log结构</h3>
+
+<p>我之前说过Log信息是有level之分的，完整的Log是包含很多key-value形式的其他信息的，下面我们看一个通过NSLog输入到System Log的Log实例：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'> ASLMessageID = 3827200;
+</span><span class='line'> "CFLog Local Time" = "2011-03-12 16:31:02.592";
+</span><span class='line'> "CFLog Thread" = 903;
+</span><span class='line'> Facility = "com.apple.console";
+</span><span class='line'> GID = 20;
+</span><span class='line'> Host = "Xu-Benyangs-MacBook-Pro";
+</span><span class='line'> Level = 4;
+</span><span class='line'> Message = "Hello World!";
+</span><span class='line'> PID = 27692;
+</span><span class='line'> ReadUID = 501;
+</span><span class='line'> Sender = Test14;
+</span><span class='line'> Time = 1299918662;
+</span><span class='line'> TimeNanoSec = 593334000;
+</span><span class='line'> UID = 501;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中我们比较关注的有这几项：</p>
+
+<ul>
+<li>Facility：用一个反链接形式字符串标示发送Log的来源，比如NSLog内部就使用的是com.apple.console。</li>
+<li>Level: 等级，NSLog的等级是4，也就是Warnning，根据之前我们多/private/etc/syslog.conf 查看，只要是在Notice(5)之上的Log都可以被记录到/private/var/system.log中去。所以你调用一个NSLog你就可以去看看你的system.log文件。</li>
+<li>Message: 就是消息本省。</li>
+<li>Sender：你的应用程序名称。</li>
+</ul>
+
+
+<p>所以从上面信息可以看出<strong>NSLog的Log是：Facility=“com.apple.console”; Level=4(每一条NSLog都当做是一个Warning Log)的信息。</strong>而顺便提一下stderr如果被定向到System Log，那么是：Facility=“user”， Level=5（每一条是当做一个Notice的Log）。</p>
+
+<h3>3. 查看Log的方法</h3>
+
+<p>那么NSLog既然主要作用是用来发送System Log的，那么如何可以方便查看这些Log呢？特别是哪些搞测试和调程序的同学来讲，看Log是做常见的事情，所以这里给出在Mac和iOS下在没有源代码或者脱离了Xcode运行环境怎么看Log的方法。</p>
+
+<p><strong>Mac</strong></p>
+
+<ul>
+<li>如果你的systemlog.conf配置正确，就可以直接去查看这个文件 <code>/private/var/log/system.log</code></li>
+<li>打开<code>/Applications/Utilities/Console</code>这个程序，在Log List中选Console Messages就可以查看所有程序的NSLog打印出来的信息了。如图：<br/>
+<img class="center" src="/myimages/log-console-mac.png" width="400" height="400"><br/>
+如图所示，Console中也提供了查看system.log的快捷方式。这里可能对你造成困惑，为什么有了system.log还有一个Console Messages。其实说白了Console Messages只是讲system log 中facility为“com.apple.console”的都筛选出来了，所以你就姑且可以把Console Messages中的信息认识全部是NSLog产生的。但是其实如果你自己发送一个facility=“com.apple.console”的日志，同样会出现在Console Messages中。</li>
+</ul>
+
+
+<p><strong>iOS</strong></p>
+
+<p>在真机上调试程序的时候打开Xcode 中的Oganizer, 然后在你当前的device下选取Console就可以看到这个Device的System Log了，如图。<br/>
+<img class="center" src="/myimages/log-console-ios.png" width="400" height="400"><br/>
+这里我用的是xcode 4，所以界面和你的也许会不一样。</p>
+
+<h3>4. 程序员使用NSLog注意事项</h3>
+
+<p>在了解了NSLog的工作原理之后，你还敢像只是用printf那样使用NSLog了吗？我可以很负责人的告诉你虽然苹果的设备硬件条件都很牛B，但是NSLog还是是一件非常expensive的事情，主要体现在这两点：</p>
+
+<ul>
+<li>NSLog在打印信息的同时要发送日志，效率低</li>
+<li>程序一些调试信息通过NSLog发送到System Log之后，很容易被其他人查看到，对你程序的安全性造成了直接的威胁。除了通过xcode的oganizer可以查看console，在iPhone上有一个叫<a href="http://itunes.apple.com/us/app/consolelog/id415116252?mt=8">ConsoleLog</a>的程序可以查看你的这些日志。</li>
+</ul>
+
+
+<p>所以综合这些因素，我们应该在程序release的时候尽量去掉NSLog，但是如果程序大了一个一个去删NSLog似乎也不现实。于是网上就有不少牛人提供了不少的解决方案。推荐一篇著名的Cocoa Is My Girlfriend的<a href="http://www.cimgf.com/2009/01/24/dropping-nslog-in-release-builds/">&#8220;Dropping NSLog in Release Build&#8221;</a>.</p>
+
+<p><em>最后，感谢<a href="http://itunes.apple.com/us/app/camscanner-free/id388627783?mt=8">CamScanner</a>帮我把手绘直接扫描成电子版。</em></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/asl/'>ASL</a>, <a class='category' href='/blog/categories/facility/'>Facility</a>, <a class='category' href='/blog/categories/nslog/'>NSLog</a>, <a class='category' href='/blog/categories/console/'>console</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/printf/'>printf</a>, <a class='category' href='/blog/categories/stderr/'>stderr</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ios-osx-log-sys-in-deep-part1" title="Previous Post: iOS and Mac OS 调试信息输出（一）">&laquo; iOS and Mac OS 调试信息输出（一）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/objective-c-singleton-template" title="next Post: Objective-C Singleton template">Objective-C Singleton template &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

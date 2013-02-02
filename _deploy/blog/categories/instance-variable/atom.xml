@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: instance variable | 本]]></title>
+  <link href="http://vagase.me/blog/categories/instance-variable/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T12:01:42+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[NSManagedObject property没有实例变量的模拟]]></title>
+    <link href="http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation"/>
+    <updated>2010-08-15T00:00:00+08:00</updated>
+    <id>http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation</id>
+    <content type="html"><![CDATA[<p>趁现在还记忆犹新，而且还小有兴奋，把自己怎么实现RT话题写下来。</p>
+
+<p>这个问题其实是在我学习CoreData的时候就一直存在，在CoreData里面有一个“很酷”的类NSManagedObject，只要是找个类的子类，那么这些类的property只要申明并且在.m里面申明为dynamic就可以，而不需要为property指定特定的实力变量，用起来特别方便。这让我这个经常实用property的人觉得真的是匪夷所思啊。一直在想找个玩意儿到底是采用了什么魔法，才能够导致property和实力变量之间的依赖可以剥离。而且前段时间和Kevin同学一起讨论了一下，但是都表示没有头绪。</p>
+
+<p>最近又刚好温习了一下 <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">"Objective-C Runtime Programming Guide"</a>这才恍然大悟，于是花了一天的时间就实现出了类似的效果。并且通过这次实践，对动态语言到底有多动态又有了从来没有过的深入认识，这种感觉很过瘾。</p>
+
+<!-- More -->
+
+
+<p>具体是怎么实现的不想多讲，原理不难，过程也不复杂，自己看源代码去，但是要求对oc runtime要有所了解。最终的效果就是我实现一个叫SmartObject 的类，只要是从找个类继承下来的类就可以想NSManagedObject的子类那样不用给出实力变量就可以使用property了！具体使用如下：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">import</span> <span class="s">&quot;SmartObject.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@interface</span> <span class="nc">TestClass</span> : <span class="nc">SmartObject</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">title</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">location</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">NSDate</span> <span class="o">*</span><span class="n">date</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">import</span> <span class="s">&quot;TestClass.h&quot;</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@implementation</span> <span class="nc">TestClass</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">title</span><span class="p">;</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">location</span><span class="p">;</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">date</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>结果就可以这样使用了：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">TestClass</span> <span class="o">*&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span> <span class="o">=</span> <span class="p">[[</span><span class="n">TestClass</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;this is title&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">@&quot;this is location&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">.</span><span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">.</span><span class="n">location</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">([</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">myObject</span><span class="p">.</span><span class="n">date</span> <span class="n">description</span><span class="p">],</span> <span class="nb">nil</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>感觉是不是很酷啊～</p>
+
+<hr />
+
+<p><strong>Github: <a href="https://github.com/vagase/SmartObject">https://github.com/vagase/SmartObject</a></strong></p>
+]]></content>
+  </entry>
+  
+</feed>

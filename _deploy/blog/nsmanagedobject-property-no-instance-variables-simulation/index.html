@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>NSManagedObject property没有实例变量的模拟 - 本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="趁现在还记忆犹新，而且还小有兴奋，把自己怎么实现RT话题写下来。 这个问题其实是在我学习CoreData的时候就一直存在，在CoreData里面有一个“很酷”的类NSManagedObject，只要是找个类的子类，那么这些类的property只要申明并且在.m里面申明为dynamic就可以， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">NSManagedObject Property没有实例变量的模拟</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-08-15T00:00:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>趁现在还记忆犹新，而且还小有兴奋，把自己怎么实现RT话题写下来。</p>
+
+<p>这个问题其实是在我学习CoreData的时候就一直存在，在CoreData里面有一个“很酷”的类NSManagedObject，只要是找个类的子类，那么这些类的property只要申明并且在.m里面申明为dynamic就可以，而不需要为property指定特定的实力变量，用起来特别方便。这让我这个经常实用property的人觉得真的是匪夷所思啊。一直在想找个玩意儿到底是采用了什么魔法，才能够导致property和实力变量之间的依赖可以剥离。而且前段时间和Kevin同学一起讨论了一下，但是都表示没有头绪。</p>
+
+<p>最近又刚好温习了一下 <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">&#8220;Objective-C Runtime Programming Guide&#8221;</a>这才恍然大悟，于是花了一天的时间就实现出了类似的效果。并且通过这次实践，对动态语言到底有多动态又有了从来没有过的深入认识，这种感觉很过瘾。</p>
+
+<!-- More -->
+
+
+<p>具体是怎么实现的不想多讲，原理不难，过程也不复杂，自己看源代码去，但是要求对oc runtime要有所了解。最终的效果就是我实现一个叫SmartObject 的类，只要是从找个类继承下来的类就可以想NSManagedObject的子类那样不用给出实力变量就可以使用property了！具体使用如下：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &quot;SmartObject.h&quot;</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">TestClass</span> : <span class="nc">SmartObject</span> <span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">title</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">location</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">retain</span><span class="p">)</span> <span class="n">NSDate</span> <span class="o">*</span><span class="n">date</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &quot;TestClass.h&quot;</span>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">TestClass</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">title</span><span class="p">;</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">location</span><span class="p">;</span>
+</span><span class='line'><span class="k">@dynamic</span> <span class="n">date</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>结果就可以这样使用了：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">TestClass</span> <span class="o">*</span><span class="n">_myObject</span><span class="p">;</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">_myObject</span> <span class="o">=</span> <span class="p">[[</span><span class="n">TestClass</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="n">_myObject</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;this is title&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">_myObject</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">@&quot;this is location&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">_myObject</span><span class="p">.</span><span class="n">date</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="n">_myObject</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="n">_myObject</span><span class="p">.</span><span class="n">location</span><span class="p">,</span> <span class="nb">nil</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">([</span><span class="n">_myObject</span><span class="p">.</span><span class="n">date</span> <span class="n">description</span><span class="p">],</span> <span class="nb">nil</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>感觉是不是很酷啊～</p>
+
+<hr />
+
+<p><strong>Github: <a href="https://github.com/vagase/SmartObject">https://github.com/vagase/SmartObject</a></strong></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/nsmanagedobject/'>NSManagedObject</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/instance-variable/'>instance variable</a>, <a class='category' href='/blog/categories/property/'>property</a>, <a class='category' href='/blog/categories/没有实例变量/'>没有实例变量</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/uiview-with-non-rect-shape" title="Previous Post: UIView创建不规则视图">&laquo; UIView创建不规则视图</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/pc-keyboard-switch-command-option-kyes-on-mac" title="next Post: PC键盘在Mac下Command/Option键切换">PC键盘在Mac下Command/Option键切换 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 管道 | 本]]></title>
+  <link href="http://vagase.me/blog/categories/管道/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T12:01:42+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS IO 重定向（NSLog to UITextView）]]></title>
+    <link href="http://vagase.me/blog/ios-io-redirect"/>
+    <updated>2011-11-25T00:00:00+08:00</updated>
+    <id>http://vagase.me/blog/ios-io-redirect</id>
+    <content type="html"><![CDATA[<h3>情形描述:</h3>
+
+<p>在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（<a href="http://octopress.dev/ios-osx-log-sys-in-deep-part1/">这里有NSLog详细描述</a>），你可以通过一定办法取出这个log。甚至可以写一套日志系统，然后将这些信息保存到日志中，然后导出或者上传自己的服务器。但是这些太麻烦了，简直是弱爆鸟。我们的目的是：在App里面能够直接像xCode console窗口那样显示NSLog的信息，准确的说是标准输出的信息。</p>
+
+<!-- More -->
+
+
+<h3>关键技术：IO重定向</h3>
+
+<p>通过IO重定向，我们可以直接“截取” stdout,stderr等标准输出的信息（NSLog->stderr），然后再在自己的View上显示出来。</p>
+
+<ol>
+<li>通过NSPipe创建一个管道（<a href="http://www.cocoadev.com/index.pl?NSPipe">这里有详细讲NSPipe的文章</a>），pipe有读端和写端.</li>
+<li>通过dup2（<a href="http://developer.apple.com/library/IOs/#documentation/System/Conceptual/ManPages_iPhoneOS/man2/dup2.2.html">这里有详细将dup2的文章&lt;</a>）讲标准输入重定向到pipe的写端。</li>
+<li>通过NSFileHandle监听pipe的读端，然后讲读出的信息显示在uitextview上。</li>
+</ol>
+
+
+<h4>相关代码：</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="err">@</span><span class="n">implement</span> <span class="n">TestAppDelegate</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">redirectNotificationHandle:</span><span class="p">(</span><span class="n">NSNotification</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">nf</span><span class="p">{</span>
+</span><span class='line'><span class="n">NSData</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="n">nf</span> <span class="n">userInfo</span><span class="p">]</span> <span class="nl">objectForKey:</span><span class="n">NSFileHandleNotificationDataItem</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">NSString</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithData:</span><span class="n">data</span> <span class="nl">encoding:</span><span class="n">NSUTF8StringEncoding</span><span class="p">]</span> <span class="n">autorelease</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">self</span><span class="p">.</span><span class="n">logTextView</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%@</span><span class="se">\n</span><span class="s">%@&quot;</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">logTextView</span><span class="p">.</span><span class="n">text</span><span class="p">,</span> <span class="n">str</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSRange</span> <span class="n">range</span><span class="p">;</span>
+</span><span class='line'><span class="n">range</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">logTextView</span><span class="p">.</span><span class="n">text</span> <span class="n">length</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">range</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">logTextView</span> <span class="nl">scrollRangeToVisible:</span><span class="n">range</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[[</span><span class="n">nf</span> <span class="n">object</span><span class="p">]</span> <span class="n">readInBackgroundAndNotify</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">redirectSTD:</span><span class="p">(</span><span class="kt">int</span> <span class="p">)</span><span class="n">fd</span><span class="p">{</span>
+</span><span class='line'><span class="n">NSPipe</span> <span class="o">*</span> <span class="n">pipe</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSPipe</span> <span class="n">pipe</span><span class="p">]</span> <span class="p">;</span>
+</span><span class='line'><span class="n">NSFileHandle</span> <span class="o">*</span><span class="n">pipeReadHandle</span> <span class="o">=</span> <span class="p">[</span><span class="n">pipe</span> <span class="n">fileHandleForReading</span><span class="p">]</span> <span class="p">;</span>
+</span><span class='line'><span class="n">dup2</span><span class="p">([[</span><span class="n">pipe</span> <span class="n">fileHandleForWriting</span><span class="p">]</span> <span class="n">fileDescriptor</span><span class="p">],</span> <span class="n">fd</span><span class="p">)</span> <span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver:</span><span class="n">self</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                                     <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">redirectNotificationHandle:</span><span class="p">)</span>
+</span><span class='line'>                                         <span class="nl">name:</span><span class="n">NSFileHandleReadCompletionNotification</span>
+</span><span class='line'>                                       <span class="nl">object:</span><span class="n">pipeReadHandle</span><span class="p">]</span> <span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">pipeReadHandle</span> <span class="n">readInBackgroundAndNotify</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">application:</span><span class="p">(</span><span class="n">UIApplication</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">application</span>
+</span><span class='line'><span class="nl">didFinishLaunchingWithOptions:</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">launchOption</span><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">self</span> <span class="nl">redirectSTD:</span><span class="n">STDOUT_FILENO</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span> <span class="nl">redirectSTD:</span><span class="n">STDERR_FILENO</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//YOUR CODE HERE...</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//YOUR CODE HERE...&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>一旦通过printf或者NSLog写数据，因为重定向过，这些数据都会写到Pipe的写端。同时pipe会将这些数据从写端直接传送到读端。读端通过NSFileHandle的“监控”函数取出这些数据，并最终显示在uitextview上。</p>
+
+<h4>截图：</h4>
+
+<p><img src="/myimages/io-redirect.png" width="300" height="400"></p>
+]]></content>
+  </entry>
+  
+</feed>

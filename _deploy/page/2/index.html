@@ -1,0 +1,555 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="有点标题党，最近在看开源游戏库SDL，只是因为要用到其中的thread和timer这些东西，所以就顺便看了看源代码，发现timer很精悍，所以分享其中的带代码。 1.首先通过init函数创建一个timer自己的thread（暂且叫timer线程），所以在使用timer之前一点要先调用init函数 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.me/page/2">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+
+  
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/how-to-make-timer">如何自己动手做timer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-11-16T00:00:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>有点标题党，最近在看开源游戏库<a href="http://www.libsdl.org">SDL</a>，只是因为要用到其中的thread和timer这些东西，所以就顺便看了看源代码，发现timer很精悍，所以分享其中的带代码。</p>
+
+<p>1.首先通过init函数创建一个timer自己的thread（暂且叫timer线程），所以在使用timer之前一点要先调用init函数。</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">SDL_SYS_TimerInit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">timer_alive</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">timer</span> <span class="o">=</span> <span class="n">SDL_CreateThread</span><span class="p">(</span><span class="n">RunTimer</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">timer</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</span><span class='line'>        <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="n">SDL_SetTimerThreaded</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">static</span> <span class="kt">int</span> <span class="nf">RunTimer</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">unused</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">while</span> <span class="p">(</span><span class="n">timer_alive</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">SDL_timer_running</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">SDL_ThreadedTimerCheck</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="n">SDL_Delay</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/how-to-make-timer">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/fake-uialertview">模仿UIAlertView，iOS模式对话框</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-11-13T00:00:00+08:00" pubdate data-updated="true">Nov 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在程序UI设计上，很多情况我们会需要一种模式的对话框来进行操作。现有的iOS提供如下方式满足这种需求:</p>
+
+<ul>
+<li>UIAlertView</li>
+<li>UIViewController  : - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated</li>
+</ul>
+
+
+<p>但是这两者明显都有不足，比如说UIAlertView官方只能显示title，message, buttons. 如果想要显示一个帐号密码输入框就不行（虽然网络上有一些程序员通过hack的方式实现了, <a href="http://stackoverflow.com/questions/376104/uitextfield-in-uialertview-on-iphone-how-to-make-it-responsive">http://stackoverflow.com/questions/376104/uitextfield-in-uialertview-on-iphone-how-to-make-it-responsive</a>， 但是现在还是挺费劲的），所以想要随心所欲的在多样化模式对话框的UI界面标准的lib明显不能满足这个需求。于是我就实现了一个可以任意设置界面的模式对话框，叫 BYDialog.在给这个东西命名上，我想找一个好的前缀，但是一直没有更好的想法，所以就自恋地直接用自己的中文名的拼音开头作了前缀。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/fake-uialertview">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/pc-keyboard-switch-command-option-kyes-on-mac">PC键盘在Mac下Command/Option键切换</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-08-18T00:00:00+08:00" pubdate data-updated="true">Aug 18<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一直以来有这么一种烦恼困扰着我，那就是把pc键盘和mac的兼容性。我之所以喜欢用mac，有很大一个原因是因为mac的commad键位设置得很舒服，每次复制粘贴手不用移动很大位置（不像windows），这个对一个程序员是很重要的。但是每当插上一个windows外界键盘的时候，win键默认为command，而alt默认是option，这就搞得command键位不是很舒服了，作为一个穷学生，又买不起mac外接键盘，只能这样默默地忍受着这种不和谐，心里默默流泪。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/pc-keyboard-switch-command-option-kyes-on-mac">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/nsmanagedobject-property-no-instance-variables-simulation">NSManagedObject Property没有实例变量的模拟</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-08-15T00:00:00+08:00" pubdate data-updated="true">Aug 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>趁现在还记忆犹新，而且还小有兴奋，把自己怎么实现RT话题写下来。</p>
+
+<p>这个问题其实是在我学习CoreData的时候就一直存在，在CoreData里面有一个“很酷”的类NSManagedObject，只要是找个类的子类，那么这些类的property只要申明并且在.m里面申明为dynamic就可以，而不需要为property指定特定的实力变量，用起来特别方便。这让我这个经常实用property的人觉得真的是匪夷所思啊。一直在想找个玩意儿到底是采用了什么魔法，才能够导致property和实力变量之间的依赖可以剥离。而且前段时间和Kevin同学一起讨论了一下，但是都表示没有头绪。</p>
+
+<p>最近又刚好温习了一下 <a href="http://developer.apple.com/mac/library/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">&#8220;Objective-C Runtime Programming Guide&#8221;</a>这才恍然大悟，于是花了一天的时间就实现出了类似的效果。并且通过这次实践，对动态语言到底有多动态又有了从来没有过的深入认识，这种感觉很过瘾。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/nsmanagedobject-property-no-instance-variables-simulation">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/uiview-with-non-rect-shape">UIView创建不规则视图</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-08-06T00:00:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>总所周知，UIView都是方形的，并不能产生一个不规则的形状的view（小弟才疏学浅，目前确实没有发现能够创建真实不规则视图的方法，如果有，不吝赐教，感激涕零！）。为什么我们有创建不规则view的需求？如果只是为了在View上显示不规则图形那大可不必，直接讲不规则图形添加到view上，然后讲view的backgroundColor设置为UIColor clearColor就可以；但是之所以有这样的需求，很大部分就是为了判断不规则的图形去响应触摸事件，判断图形是否被触摸选中了这样的要求，我们最直接的想法就是每个不规则图形都是一个view，那么图形是否选中就可以通过UIResponder的那一系列触摸有关的响应函数得知了，所以这个时候我们就需要不规则的view。但是显示的杯具是，iOS并没有提供这样的不规则view，如果要完成刚才的需求，就只能手动判断触摸的点是否在不规则图形里面了，这有的时候将是一件比较痛苦的事情。那么现在提供一种“创建不规则view”的解决方案：</p>
+
+<p>不知道大家有没有注意到UIView有这样一个函数：<code>- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event</code> 这个函数就是用来判断指定的点是否在View内，我们方法就是在这个函数中，如果point在指定的不规则图形内返回YES，反之就返回NO。这样不规则图形的bounds就相当于代表了view自己的bounds。这样当你触摸view的时候，当且只有当触摸到指定图形内才会使得view被触摸到，才会调用到UIResponder一系列触摸响应事件。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/uiview-with-non-rect-shape">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments">NSLog Warning:&#8221;format Not a String Literal and No Format Arguments&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-07-15T00:00:00+08:00" pubdate data-updated="true">Jul 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我觉得这个问题已经烦躁了我很久很久，因为自打我学习Objective c的时候，写这样一句是没有任何问题的：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;Mimi&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>而如今升级到SnowLeopard，用上Xcode 3.2之后，如果这么写总是会有一个“format not a string literal and no format arguments”另人烦躁的warning, 虽然比较恶心，但是还是看看为什么会有这个warning再说。</p>
+
+<p>其实一切都是为了安全着想，加入你写了下面的一段程序：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">nameFormat</span> <span class="o">=</span> <span class="s">@&quot;%@ %@&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">firstName</span> <span class="o">=</span> <span class="s">@&quot;Jon&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">lastName</span> <span class="o">=</span> <span class="s">@&quot;Hess %@&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="n">nameFormat</span><span class="p">,</span> <span class="n">firstName</span><span class="p">,</span> <span class="n">lastName</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="err">；</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>那么就相当于<br/>
+<code>NSLog(@"Jon Hess %@");</code></p>
+
+<p>这样自然程序运行是有问题的！</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/nsurlconnection-timeout-issue">NSURLConnection Timeout失效问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-05-20T00:00:00+08:00" pubdate data-updated="true">May 20<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天在编译3.0的程序时候无意中写了这么一段代码：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSMutableURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableURLRequest</span> <span class="nl">requestWithURL:</span><span class="s">@&quot;...&quot;</span> <span class="nl">cachePolicy:</span><span class="n">NSURLRequestReloadIgnoringLocalAndRemoteCacheData</span> <span class="nl">timeoutInterval:</span><span class="mi">15</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="s">@&quot;FUCK GFW THREE DAYS!&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSData</span> <span class="o">*</span><span class="n">bodyData</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span> <span class="nl">dataUsingEncoding:</span><span class="n">NSUTF8StringEncoding</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setValue:</span><span class="s">@&quot;text/xml; charset=utf-8&quot;</span> <span class="nl">forHTTPHeaderField:</span><span class="s">@&quot;Content-Type&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setValue:</span><span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%u&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">bodyData</span> <span class="n">length</span><span class="p">]]</span> <span class="nl">forHTTPHeaderField:</span><span class="s">@&quot;Content-Length&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setHTTPBody:</span> <span class="n">bodyData</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setHTTPMethod:</span> <span class="s">@&quot;POST&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">NSURLConnection</span> <span class="o">*</span><span class="n">connection</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLConnection</span> <span class="nl">connectionWithRequest:</span><span class="n">request</span> <span class="nl">delegate:</span><span class="n">self</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果由于本部龟速的网络导致程序迟迟没有反应，一直处于loading，但是很奇怪的是在15s之后程序仍然没有NSURLConnection fail之類的回调，我测试了一下程序最终在一分多钟以后才返回了，也就是说我们设置的timeout失效了。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/nsurlconnection-timeout-issue">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/core-animation-hardware-acceleration">Core Animation硬件加速切身体验</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-05-15T00:00:00+08:00" pubdate data-updated="true">May 15<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一直以来对Core Animation的理解都只是停留在这个技术是用来做动画的。通过CA为什么会得到流畅的动画效果，那是因为Core Animation是提供硬件加速的。然后，就没有然后了。</p>
+
+<p>因为毕设的一部分是做一个iPhone的视频播放器，当然渲染解码出来的数据就是一个问题了。最先用很粗糙的UIImageView通过setImage的方式来呈现每一帧的数据。额的个天啊，虽然视频是播放出来了，但是明显有很卡的感觉！而且如果UIImageView越大，那么越卡，也就是渲染一张图片的时间越长。于是就想到了最坏的打算：用OPENGL来渲染。但是本人一向对非navtive sdk的开发比较反感，因为和系统打交道比较麻烦，所以这只是最坏的打算。于是有投奔CALayer，通过CAlayer的contents来渲染每一帧，结果效果大让人满意，渲染每一帧所花的时间基本上是同UIImageView所需时间的<strong>60%</strong>左右！播放那是非常流畅！</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/core-animation-hardware-acceleration">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

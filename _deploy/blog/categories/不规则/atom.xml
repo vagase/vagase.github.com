@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 不规则 | 本]]></title>
+  <link href="http://vagase.me/blog/categories/不规则/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-02-02T12:01:42+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[UIView创建不规则视图]]></title>
+    <link href="http://vagase.me/blog/uiview-with-non-rect-shape"/>
+    <updated>2010-08-06T00:00:00+08:00</updated>
+    <id>http://vagase.me/blog/uiview-with-non-rect-shape</id>
+    <content type="html"><![CDATA[<p>总所周知，UIView都是方形的，并不能产生一个不规则的形状的view（小弟才疏学浅，目前确实没有发现能够创建真实不规则视图的方法，如果有，不吝赐教，感激涕零！）。为什么我们有创建不规则view的需求？如果只是为了在View上显示不规则图形那大可不必，直接讲不规则图形添加到view上，然后讲view的backgroundColor设置为UIColor clearColor就可以；但是之所以有这样的需求，很大部分就是为了判断不规则的图形去响应触摸事件，判断图形是否被触摸选中了这样的要求，我们最直接的想法就是每个不规则图形都是一个view，那么图形是否选中就可以通过UIResponder的那一系列触摸有关的响应函数得知了，所以这个时候我们就需要不规则的view。但是显示的杯具是，iOS并没有提供这样的不规则view，如果要完成刚才的需求，就只能手动判断触摸的点是否在不规则图形里面了，这有的时候将是一件比较痛苦的事情。那么现在提供一种“创建不规则view”的解决方案：</p>
+
+<p>不知道大家有没有注意到UIView有这样一个函数：<code>- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event</code> 这个函数就是用来判断指定的点是否在View内，我们方法就是在这个函数中，如果point在指定的不规则图形内返回YES，反之就返回NO。这样不规则图形的bounds就相当于代表了view自己的bounds。这样当你触摸view的时候，当且只有当触摸到指定图形内才会使得view被触摸到，才会调用到UIResponder一系列触摸响应事件。</p>
+
+<!-- More -->
+
+
+<p>代码如下：</p>
+
+<p><strong>RoundView.h</strong>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">MyView</span> : <span class="nc">UIView</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">UIBezierPath</span> <span class="o">*</span><span class="n">_path</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">pointInside:</span><span class="p">(</span><span class="n">CGPoint</span><span class="p">)</span><span class="n">point</span> <span class="nl">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><strong>RoundView.m</strong>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// Print current selector&#39;s name&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">PRINT_CURRENT_SEL</span> <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;&amp;lt;%@&amp;gt; %@&quot;</span><span class="p">,</span> <span class="n">NSStringFromClass</span><span class="p">([</span><span class="n">self</span> <span class="n">class</span><span class="p">]),</span><span class="n">NSStringFromSelector</span><span class="p">(</span><span class="n">_cmd</span><span class="p">))</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//</span>
+</span><span class='line'><span class="c1">// PrivateMethods</span>
+</span><span class='line'><span class="c1">// This category provide private apis for RoundView class</span>
+</span><span class='line'><span class="c1">//</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">RoundView</span><span class="nl">(PrivateMethods)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// Initialize all view&#39;s state</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">_init</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// Highlight view&#39;s border, better visual effect for testing.</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">_highlightBorder</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">RoundView</span><span class="nl">(PrivateMethods)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">init</span><span class="p">{</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">highlightBorder</span><span class="p">];</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">clearColor</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// Create path object as round rect</span>
+</span><span class='line'><span class="n">_path</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIBezierPath</span> <span class="nl">bezierPathWithRoundedRect:</span><span class="n">CGRectInset</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">,</span>  <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="nl">cornerRadius:</span><span class="mi">60</span><span class="p">]</span> <span class="n">retain</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">_highlightBorder</span><span class="p">{</span>
+</span><span class='line'><span class="n">CALayer</span> <span class="o">*</span><span class="n">theLayer</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="n">layer</span><span class="p">];</span>
+</span><span class='line'><span class="n">theLayer</span><span class="p">.</span><span class="n">borderColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">blueColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+</span><span class='line'><span class="n">theLayer</span><span class="p">.</span><span class="n">borderWidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@end</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">pragma</span> <span class="n">mark</span> <span class="o">-&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">@implementation</span> <span class="nc">RoundView</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nl">initWithCoder:</span><span class="p">(</span><span class="n">NSCoder</span> <span class="o">*</span><span class="p">)</span><span class="n">aDecoder</span><span class="p">{</span>
+</span><span class='line'><span class="k">if</span><span class="p">((</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithCoder:</span><span class="n">aDecoder</span><span class="p">])){</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">self</span> <span class="n">_init</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nl">initWithFrame:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="p">{</span>
+</span><span class='line'><span class="k">if</span> <span class="p">((</span><span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nl">initWithFrame:</span><span class="n">frame</span><span class="p">]))</span> <span class="p">{</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">self</span> <span class="n">_init</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">drawRect:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">rect</span> <span class="p">{</span>
+</span><span class='line'><span class="p">[[</span><span class="n">UIColor</span> <span class="n">redColor</span><span class="p">]</span> <span class="n">setFill</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">_path</span> <span class="n">fill</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span> <span class="p">{</span>
+</span><span class='line'><span class="p">[</span><span class="n">_path</span> <span class="n">release</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">super</span> <span class="n">dealloc</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nl">pointInside:</span><span class="p">(</span><span class="n">CGPoint</span><span class="p">)</span><span class="n">point</span> <span class="nl">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'><span class="k">return</span> <span class="p">[</span><span class="n">_path</span> <span class="nl">containsPoint:</span><span class="n">point</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">pragma</span> <span class="n">mark</span> <span class="o">-&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">pragma</span> <span class="n">mark</span> <span class="n">UIResponder</span> <span class="n">touches</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesBegan:</span><span class="p">(</span><span class="n">NSSet</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'><span class="n">PRINT_CURRENT_SEL</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesMoved:</span><span class="p">(</span><span class="n">NSSet</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'><span class="n">PRINT_CURRENT_SEL</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesEnded:</span><span class="p">(</span><span class="n">NSSet</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'><span class="n">PRINT_CURRENT_SEL</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesCancelled:</span><span class="p">(</span><span class="n">NSSet</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent:</span><span class="p">(</span><span class="n">UIEvent</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">event</span><span class="p">{</span>
+</span><span class='line'><span class="n">PRINT_CURRENT_SEL</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></li>
+</ul>
+
+
+<p>这个demo中用到了3.2以后提供的UIBezierPath类，来创建一个图形的path，在pointInside:withEvent:中判断点是不是在图形的里面，如果是返回YES，反之NO。这样就用找个图形的path代表了view的bounds。那么即使你触摸在view内但是没有在找个图形上，touchesBegan就不会被调用，不会打印相应信息在console中。
+所以这样这个view的边界就变成了这个不规则图形的边界了，就变相地创建出了一个不规则的view了！cheers！</p>
+]]></content>
+  </entry>
+  
+</feed>
