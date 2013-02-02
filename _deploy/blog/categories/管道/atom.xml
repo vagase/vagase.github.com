@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: 管道 | 本]]></title>
-  <link href="http://vagase.me/blog/categories/管道/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/管道/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS IO 重定向（NSLog to UITextView）]]></title>
-    <link href="http://vagase.me/blog/ios-io-redirect"/>
+    <link href="http://vagase.github.com/blog/ios-io-redirect"/>
     <updated>2011-11-25T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/ios-io-redirect</id>
+    <id>http://vagase.github.com/blog/ios-io-redirect</id>
     <content type="html"><![CDATA[<h3>情形描述:</h3>
 
 <p>在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（<a href="http://octopress.dev/ios-osx-log-sys-in-deep-part1/">这里有NSLog详细描述</a>），你可以通过一定办法取出这个log。甚至可以写一套日志系统，然后将这些信息保存到日志中，然后导出或者上传自己的服务器。但是这些太麻烦了，简直是弱爆鸟。我们的目的是：在App里面能够直接像xCode console窗口那样显示NSLog的信息，准确的说是标准输出的信息。</p>
@@ -134,7 +134,7 @@
 
 <h4>截图：</h4>
 
-<p><img src="/myimages/io-redirect.png" width="300" height="400"></p>
+<p><a class="fancybox" href="/myimages/io-redirect.png"><img src="/myimages/io-redirect.png" width="300" height="400"></a></p>
 ]]></content>
   </entry>
   

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Singleton | 本]]></title>
-  <link href="http://vagase.me/blog/categories/singleton/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/singleton/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Objective-C Singleton template]]></title>
-    <link href="http://vagase.me/blog/objective-c-singleton-template"/>
+    <link href="http://vagase.github.com/blog/objective-c-singleton-template"/>
     <updated>2011-05-24T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/objective-c-singleton-template</id>
+    <id>http://vagase.github.com/blog/objective-c-singleton-template</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="http://blog.mugunthkumar.com/coding/objective-c-singleton-template-for-xcode-4/">http://blog.mugunthkumar.com/coding/objective-c-singleton-template-for-xcode-4/</a></p>
 
 <h4>_<strong>FILEBASENAME</strong>_.h</h4>

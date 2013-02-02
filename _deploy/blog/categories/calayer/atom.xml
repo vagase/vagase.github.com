@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: CALayer | 本]]></title>
-  <link href="http://vagase.me/blog/categories/calayer/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/calayer/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Core Animation硬件加速切身体验]]></title>
-    <link href="http://vagase.me/blog/core-animation-hardware-acceleration"/>
+    <link href="http://vagase.github.com/blog/core-animation-hardware-acceleration"/>
     <updated>2010-05-15T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/core-animation-hardware-acceleration</id>
+    <id>http://vagase.github.com/blog/core-animation-hardware-acceleration</id>
     <content type="html"><![CDATA[<p>一直以来对Core Animation的理解都只是停留在这个技术是用来做动画的。通过CA为什么会得到流畅的动画效果，那是因为Core Animation是提供硬件加速的。然后，就没有然后了。</p>
 
 <p>因为毕设的一部分是做一个iPhone的视频播放器，当然渲染解码出来的数据就是一个问题了。最先用很粗糙的UIImageView通过setImage的方式来呈现每一帧的数据。额的个天啊，虽然视频是播放出来了，但是明显有很卡的感觉！而且如果UIImageView越大，那么越卡，也就是渲染一张图片的时间越长。于是就想到了最坏的打算：用OPENGL来渲染。但是本人一向对非navtive sdk的开发比较反感，因为和系统打交道比较麻烦，所以这只是最坏的打算。于是有投奔CALayer，通过CAlayer的contents来渲染每一帧，结果效果大让人满意，渲染每一帧所花的时间基本上是同UIImageView所需时间的<strong>60%</strong>左右！播放那是非常流畅！</p>

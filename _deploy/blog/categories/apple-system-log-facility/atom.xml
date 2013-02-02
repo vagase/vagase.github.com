@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Apple System Log facility | 本]]></title>
-  <link href="http://vagase.me/blog/categories/apple-system-log-facility/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/apple-system-log-facility/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS and Mac OS 调试信息输出（一）]]></title>
-    <link href="http://vagase.me/blog/ios-osx-log-sys-in-deep-part1"/>
+    <link href="http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1"/>
     <updated>2011-03-13T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/ios-osx-log-sys-in-deep-part1</id>
+    <id>http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1</id>
     <content type="html"><![CDATA[<h2>调试信息输出方法介绍</h2>
 
 <p>在Apple <a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">Tech Note TN2239：iOS Debugging Magic</a>中提到了程序开发中Debug output 方法：</p>

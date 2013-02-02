@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: warning | 本]]></title>
-  <link href="http://vagase.me/blog/categories/warning/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/warning/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSLog warning:"format not a string literal and no format arguments"]]></title>
-    <link href="http://vagase.me/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments"/>
+    <link href="http://vagase.github.com/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments"/>
     <updated>2010-07-15T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments</id>
+    <id>http://vagase.github.com/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments</id>
     <content type="html"><![CDATA[<p>我觉得这个问题已经烦躁了我很久很久，因为自打我学习Objective c的时候，写这样一句是没有任何问题的：
 <div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -53,7 +53,7 @@
 
 <p>但是如果你觉得你不需要xcode为你操这些心，方便才是王道的话，你可以在xcode里面将GCC 4.2-Warnings中的Typecheck Calls to printf/scanf选项去掉就可以解决问题：</p>
 
-<p><img src="/myimages/nslog_type_check.png" width="400" height="400"></p>
+<p><a class="fancybox" href="/myimages/nslog_type_check.png"><img src="/myimages/nslog_type_check.png" width="400" height="400"></a></p>
 ]]></content>
   </entry>
   

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: mac | 本]]></title>
-  <link href="http://vagase.me/blog/categories/mac/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/mac/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[PC键盘在Mac下Command/Option键切换]]></title>
-    <link href="http://vagase.me/blog/pc-keyboard-switch-command-option-kyes-on-mac"/>
+    <link href="http://vagase.github.com/blog/pc-keyboard-switch-command-option-kyes-on-mac"/>
     <updated>2010-08-18T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/pc-keyboard-switch-command-option-kyes-on-mac</id>
+    <id>http://vagase.github.com/blog/pc-keyboard-switch-command-option-kyes-on-mac</id>
     <content type="html"><![CDATA[<p>一直以来有这么一种烦恼困扰着我，那就是把pc键盘和mac的兼容性。我之所以喜欢用mac，有很大一个原因是因为mac的commad键位设置得很舒服，每次复制粘贴手不用移动很大位置（不像windows），这个对一个程序员是很重要的。但是每当插上一个windows外界键盘的时候，win键默认为command，而alt默认是option，这就搞得command键位不是很舒服了，作为一个穷学生，又买不起mac外接键盘，只能这样默默地忍受着这种不和谐，心里默默流泪。</p>
 
 <!-- More -->
@@ -27,11 +27,11 @@
 
 <p>打开键盘的系统设置,点击modifier keys：</p>
 
-<p><img src="/myimages/modifier_keys.png"></p>
+<p><a class="fancybox" href="/myimages/modifier_keys.png"><img src="/myimages/modifier_keys.png"></a></p>
 
 <p>然后选择你要修改的键盘（笔记本会有默认键盘的）</p>
 
-<p><img src="/myimages/modifier_keys_option.png"></p>
+<p><a class="fancybox" href="/myimages/modifier_keys_option.png"><img src="/myimages/modifier_keys_option.png"></a></p>
 
 <p>大功告成！享受到了前所未有的快感！</p>
 ]]></content>

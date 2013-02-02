@@ -29,7 +29,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://vagase.me/blog/nsrunloop-in-deep">
+  <link rel="canonical" href="http://vagase.github.com/blog/nsrunloop-in-deep">
   <link href="/favicon.ico" rel="icon">
   
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -41,8 +41,42 @@
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
+<!-- Add jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+<!-- Optionally add helpers - button, thumbnail and/or media -->
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".fancybox").fancybox();
+  });
+</script>
   
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8017622-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
 
 </head>
 
@@ -58,7 +92,7 @@
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:vagase.me" />
+    <input type="hidden" name="q" value="site:vagase.github.com" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -140,7 +174,7 @@
 
 <p>接下来看一下NSRunLoop具体的工作原理，首先是官方文档提供的说法，看图：</p>
 
-<p><img src="/myimages/NSRunLoop-Infrastructure.png"></p>
+<p><a class="fancybox" href="/myimages/NSRunLoop-Infrastructure.png"><img src="/myimages/NSRunLoop-Infrastructure.png"></a></p>
 
 <p>通过所有的“消息”都被添加到了NSRunLoop中去，而在这里这些消息并分为“input source”和“Timer source” 并在循环中检查是不是有事件需要发生，如果需要那么就调用相应的函数处理。为了更清晰的解释，我们来对比VC++和iOS消息处理过程。</p>
 
@@ -188,7 +222,7 @@
 
 <p>所以在UIApplicationMain中也是同样在不断处理runloop才是的程序没有退出。刚才的我说了NSRunLoop是一种更加高明的消息处理模式，他就高明在对消息处理过程进行了更好的抽象和封装，这样才能是的你不用处理一些很琐碎很低层次的具体消息的处理，在NSRunLoop中每一个消息就被打包在input source或者是timer source中了，当需要处理的时候就直接调用其中包含的相应对象的处理函数了。所以对外部的开发人员来讲，你感受到的就是，把source/timer加入到runloop中，然后在适当的时候类似于[receiver action]这样的事情发生了。甚至很多时候，你都没有感受到整个过程前半部分，你只是感觉到了你的某个对象的某个函数调用了。比如在UIView被触摸时会用touchesBegan/touchesMoved等等函数被调用，也许你会想，“该死的，我都不知道在那里被告知有触摸消息，这些处理函数就被调用了！？”所以，消息是有的，只是runloop已经帮你做了！为了证明我的观点，我截取了一张debug touchesBegan的call stack，有图有真相：</p>
 
-<p><img src="/myimages/runloop-callstack.png"></p>
+<p><a class="fancybox" href="/myimages/runloop-callstack.png"><img src="/myimages/runloop-callstack.png"></a></p>
 
 <p>现在会过头来看看刚才的那个会“暂停”代码的例子，有没有更加深入的认识了呢？</p>
 </div>

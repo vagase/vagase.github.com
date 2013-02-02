@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: NSURLRequest | 本]]></title>
-  <link href="http://vagase.me/blog/categories/nsurlrequest/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/nsurlrequest/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[NSURLConnection timeout失效问题]]></title>
-    <link href="http://vagase.me/blog/nsurlconnection-timeout-issue"/>
+    <link href="http://vagase.github.com/blog/nsurlconnection-timeout-issue"/>
     <updated>2010-05-20T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/nsurlconnection-timeout-issue</id>
+    <id>http://vagase.github.com/blog/nsurlconnection-timeout-issue</id>
     <content type="html"><![CDATA[<p>今天在编译3.0的程序时候无意中写了这么一段代码：
 <div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

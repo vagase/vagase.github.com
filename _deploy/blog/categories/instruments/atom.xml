@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Instruments | 本]]></title>
-  <link href="http://vagase.me/blog/categories/instruments/atom.xml" rel="self"/>
-  <link href="http://vagase.me/"/>
-  <updated>2013-02-02T12:05:10+08:00</updated>
-  <id>http://vagase.me/</id>
+  <link href="http://vagase.github.com/blog/categories/instruments/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
   <author>
     <name><![CDATA[vagase]]></name>
     <email><![CDATA[xubenyang@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[用NSZombieEnabled处理EXC_BAD_ACCESS]]></title>
-    <link href="http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
+    <link href="http://vagase.github.com/blog/handle-exc_bad_accesss-with-NSZombieEnabled"/>
     <updated>2011-03-10T00:00:00+08:00</updated>
-    <id>http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
+    <id>http://vagase.github.com/blog/handle-exc_bad_accesss-with-NSZombieEnabled</id>
     <content type="html"><![CDATA[<p>一直有件很头痛的事情就是在debug程序的时候经常出现程序crash然后在console就只是打印了EXC_BAD_ACCESS, 完全不知道问题具体出在哪里。这种情况一看就知道是对象指针出了问题，很大部分时候都是因为再次使用了一个已经完全dealloc的object。对于console的这种不负责任的报错，大家都表示纷纷不给力。其实只要你google一下EXC_BAD_ACCESS，就会得到很多很多的解决方案，这里我搜集了很多我认为讲得不错的文章和大家分享。</p>
 
 <ul>
