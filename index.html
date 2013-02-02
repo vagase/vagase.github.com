@@ -1,1 +1,667 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="情形描述: 在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.github.com">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- Add jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+<!-- Optionally add helpers - button, thumbnail and/or media -->
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".fancybox").fancybox();
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8017622-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ios-io-redirect">iOS IO 重定向（NSLog to UITextView）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-11-25T00:00:00+08:00" pubdate data-updated="true">Nov 25<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>情形描述:</h3>
+
+<p>在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（<a href="http://octopress.dev/ios-osx-log-sys-in-deep-part1/">这里有NSLog详细描述</a>），你可以通过一定办法取出这个log。甚至可以写一套日志系统，然后将这些信息保存到日志中，然后导出或者上传自己的服务器。但是这些太麻烦了，简直是弱爆鸟。我们的目的是：在App里面能够直接像xCode console窗口那样显示NSLog的信息，准确的说是标准输出的信息。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/ios-io-redirect">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/steve-jobs-forever">乔布斯辞世</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-06T00:00:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>记住这一天 <code>10/5/2011</code>. 乔布斯永远离开了我们.</p>
+
+<p>iPhone 4S ( iPhone for Steve ) : Jobs在世留给我们最后的礼物。</p>
+
+<p><a class="fancybox" href="/myimages/steve_forever.png"><img src="/myimages/steve_forever.png" width="400" height="400"></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/convert-json-to-plist">Jtop - Convert JSON to Plist</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-09-09T00:00:00+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>JSON格式很好，但是可阅读性相对较差，而且在mac下也没有很好的专门针对JSON的编辑器，一般都用文本编辑器，所以看起来非常累。</p>
+
+<p>恰好，mac下的plist文件格式如果用系统自带的properties list editor（现在整合到Xcode4中了）打开阅读性非常好。于是自己写了一个小工具将JSON转换为plist文件输出。这样看起来就非常爽了～</p>
+
+<p>两者阅读效果对比截图如下：</p>
+
+<p><a class="fancybox" href="/myimages/jtop.png"><img src="/myimages/jtop.png" width="400" height="300"></a></p>
+
+<p>Github地址：<a href="https://github.com/vagase/jtop">https://github.com/vagase/jtop</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/objective-c-singleton-template">Objective-C Singleton Template</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-24T00:00:00+08:00" pubdate data-updated="true">May 24<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>原文地址：<a href="http://blog.mugunthkumar.com/coding/objective-c-singleton-template-for-xcode-4/">http://blog.mugunthkumar.com/coding/objective-c-singleton-template-for-xcode-4/</a></p>
+
+<h4>_<strong>FILEBASENAME</strong>_.h</h4>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#import &lt;foundation /Foundation.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">___FILEBASENAMEASIDENTIFIER___</span> : <span class="nc">NSObject</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">+</span> <span class="p">(</span><span class="n">___FILEBASENAMEASIDENTIFIER___</span><span class="o">*</span><span class="p">)</span> <span class="n">sharedInstance</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/objective-c-singleton-template">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ios-osx-log-sys-in-deep-part2">iOS and Mac OS 调试信息输出（二）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-13T00:00:00+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>NSLog，没那么简单</h2>
+
+<p>在前一篇<a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">《iOS and Mac OS 调试信息输出（一）</a>中介绍了输出调试信息的方法。现在讲主角：<code>NSLog</code>。</p>
+
+<h3>1.NSLog工作流程</h3>
+
+<p>前面已经说过我们很多时候都只是讲NSLog当做是printf，比printf好就好在：1. 自动添加了换行符；2. 在信息头还添加了一些其他更易于阅读和标示的信息，如“2011-03-12 20:18:34.000 Test14[40871:903]”。但其实NSLog更重要的功能是Log功能。看了下面这幅图你也许久明白了NSLog的工作原理了。</p>
+
+<p><a class="fancybox" href="/myimages/nslog.jpeg"><img src="/myimages/nslog.jpeg" width="400" height="400"></a><br/>
+<em>NSLog工作流程图</em></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/ios-osx-log-sys-in-deep-part2">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ios-osx-log-sys-in-deep-part1">iOS and Mac OS 调试信息输出（一）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-13T00:00:00+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>调试信息输出方法介绍</h2>
+
+<p>在Apple <a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">Tech Note TN2239：iOS Debugging Magic</a>中提到了程序开发中Debug output 方法：</p>
+
+<ol>
+<li>NSLog</li>
+<li>stderr</li>
+<li>system log</li>
+</ol>
+
+
+<p>调试信息的输出主要有方式，一是通过输出到终端输出，二是输出到日志系统。下面讲介绍一下这几种输出调试信息的方式，首先从stderr说起。</p>
+
+<h4>1. stderr （引用自TN2239）</h4>
+
+<blockquote><p>Many programs, and indeed many system frameworks, print debugging messages to stderr. The destination for this output is ultimately controlled by the program: it can redirect stderr to whatever destination it chooses. However, in most cases a program does not redirect stderr, so the output goes to the default destination inherited by the program from its launch environment. This is typically one of the following:</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/ios-osx-log-sys-in-deep-part1">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/handle-exc_bad_accesss-with-NSZombieEnabled">用NSZombieEnabled处理EXC_BAD_ACCESS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-10T00:00:00+08:00" pubdate data-updated="true">Mar 10<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一直有件很头痛的事情就是在debug程序的时候经常出现程序crash然后在console就只是打印了EXC_BAD_ACCESS, 完全不知道问题具体出在哪里。这种情况一看就知道是对象指针出了问题，很大部分时候都是因为再次使用了一个已经完全dealloc的object。对于console的这种不负责任的报错，大家都表示纷纷不给力。其实只要你google一下EXC_BAD_ACCESS，就会得到很多很多的解决方案，这里我搜集了很多我认为讲得不错的文章和大家分享。</p>
+
+<ul>
+<li>CocoaDev，个人觉得讲Cocoa技术十分专业的网站之一，下面的链接详细讲了讲NSZombieEnable的原理。
+  <a href="http://www.cocoadev.com/index.pl?NSZombieEnabled">http://www.cocoadev.com/index.pl?NSZombieEnabled</a></li>
+<li>苹果官方的Mac OS X Debugging Magic, 详细讲述了最为一个高级苹果程序员应该具备的调试技巧。
+  <a href="http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html">http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html</a></li>
+<li>其实还可以在Instruments中开启NSZombie选项，这样就可以在Instruments中直接查看crash时候的call stack了。
+  <a href="http://www.markj.net/iphone-memory-debug-nszombie/">http://www.markj.net/iphone-memory-debug-nszombie/</a></li>
+</ul>
+
+
+<p>最后提醒NSZombieEnabled只能在调试的时候使用，千万不要忘记在产品发布的时候去掉，因为NSZombieEnabled不会真正去释放dealloc对象的内存，一直开启后果可想而知，自重！</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/add-custom-dict-for-mac">为Mac Dictionary添加中英文翻译傻瓜教程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-01-28T00:00:00+08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Dictionary是一个很牛B的东西，但是一直苦于Dictionary只能查看系统自带英文翻译和wiki等等，所以也就一直在用金山辞霸。金山词霸for mac的用户体验你懂的。。。为此一直很内伤。。。</p>
+
+<p>今天google了一把，原来Dictionary是可以添加额外的词典库的。按需添加好很牛B的词典库之后就可以完全抛弃金山词霸了！具体步骤如下：</p>
+
+<ol>
+<li>因为Dictionary原生不支持添加词典，所以要借助一个第三方工具来添加：<a href="http://code.google.com/p/mac-dictionary-kit/downloads/list">DictUnifier</a></li>
+<li>去这里下载你自己想要的词典库：<a href="http://yeelou.com/huzheng/stardict-dic/zh_CN/">http://yeelou.com/huzheng/stardict-dic/zh_CN/</a> （当然也有金山词霸字典库：<a href="http://yeelou.com/huzheng/stardict-dic/PowerWord/">http://yeelou.com/huzheng/stardict-dic/PowerWord/</a>），下载tarball格式。</li>
+<li>下载下来后，直接将这个文件托到刚才的程序中去，然后就等待转换完成&#8230; &#8230;提示一下，下载下来的文件是一个压缩包，不要手贱去解压，直接将压缩包拖到DictUnifier去就行了，托进去可能要一点点时间等程序反应一下，耐心等。</li>
+<li>在Dictionary App中选择你要使用的词典库：打开 配置/preference 你就知道该怎么干了。</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/add-custom-dict-for-mac">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/timer-sucks">Timer不靠谱</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-12-12T00:00:00+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。</p>
+
+<ul>
+<li><a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">&#8220;NSRunLoop概述和原理&#8221;</a></li>
+<li><a href="http://vagase.github.com/how-to-make-timer/">&#8220;如何自己动手做timer&#8221;</a></li>
+</ul>
+
+
+<p>我们把环境都设置在Cocoa中，这里所讲的timer就用NStimer，当然这里的原理适用于其他系统的timer。</p>
+
+<p>因为NSTimer是作为一种timer resource加入到NSRunLoop中去，在当timer的时间累计到规定时间之后就触发timer的action。从这个过程上看来timer应该是很“准时”的，而且现实情况也是这样的，比如一个规定每1s触发的timer绝大多数情况一般也是1s触发一次。但是timer的这种所谓的“准时”千万不要让你产生这样一种幻觉，“timer可以用来作精确的循环控制，比如用来精准控制动画”。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/timer-sucks">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/nsrunloop-in-deep">NSRunLoop概述和原理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-12-12T00:00:00+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>1.什么是NSRunLoop？</h2>
+
+<p>我们会经常看到这样的代码：</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">start:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">pageStillLoading</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">NSThread</span> <span class="nl">detachNewThreadSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">loadPageInBackground:</span><span class="p">)</span><span class="nl">toTarget:</span><span class="n">self</span> <span class="nl">withObject:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">progress</span> <span class="nl">setHidden:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">pageStillLoading</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span> <span class="nl">runMode:</span><span class="n">NSDefaultRunLoopMode</span> <span class="nl">beforeDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">distantFuture</span><span class="p">]];</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">progress</span> <span class="nl">setHidden:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这段代码很神奇的，因为他会“暂停”代码运行，而且程序运行不会因为这里有一个while循环而受到影响。在[progress setHidden:NO]执行之后，整个函数想暂停了一样停在循环里面，等loadPageInBackground里面的操作都完成了以后才让[progress setHidden:YES]运行。这样做就显得简介，而且逻辑很清晰。如果你不这样做，你就需要在loadPageInBackground里面表示load完成的地方调用[progress setHidden:YES]，显得代码不紧凑而且容易出错。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/nsrunloop-in-deep">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/2/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

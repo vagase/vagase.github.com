@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 什么是NSRunLoop | 本]]></title>
+  <link href="http://vagase.github.com/blog/categories/什么是nsrunloop/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[NSRunLoop概述和原理]]></title>
+    <link href="http://vagase.github.com/blog/nsrunloop-in-deep"/>
+    <updated>2010-12-12T00:00:00+08:00</updated>
+    <id>http://vagase.github.com/blog/nsrunloop-in-deep</id>
+    <content type="html"><![CDATA[<h2>1.什么是NSRunLoop？</h2>
+
+<p>我们会经常看到这样的代码：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">start:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">pageStillLoading</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">NSThread</span> <span class="nl">detachNewThreadSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">loadPageInBackground:</span><span class="p">)</span><span class="nl">toTarget:</span><span class="n">self</span> <span class="nl">withObject:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">progress</span> <span class="nl">setHidden:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'><span class="k">while</span> <span class="p">(</span><span class="n">pageStillLoading</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span> <span class="nl">runMode:</span><span class="n">NSDefaultRunLoopMode</span> <span class="nl">beforeDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">distantFuture</span><span class="p">]];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">[</span><span class="n">progress</span> <span class="nl">setHidden:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这段代码很神奇的，因为他会“暂停”代码运行，而且程序运行不会因为这里有一个while循环而受到影响。在[progress setHidden:NO]执行之后，整个函数想暂停了一样停在循环里面，等loadPageInBackground里面的操作都完成了以后才让[progress setHidden:YES]运行。这样做就显得简介，而且逻辑很清晰。如果你不这样做，你就需要在loadPageInBackground里面表示load完成的地方调用[progress setHidden:YES]，显得代码不紧凑而且容易出错。</p>
+
+<!-- More -->
+
+
+<p>那么具体什么是NSRunLoop呢？其实NSRunLoop的本质是一个消息机制的处理模式。如果你对vc++编程有一定了解，在windows中，有一系列很重要的函数SendMessage，PostMessage，GetMessage，这些都是有关消息传递处理的API。但是在你进入到Cocoa的编程世界里面，我不知道你是不是走的太快太匆忙而忽视了这个很重要的问题，Cocoa里面就没有提及到任何关于消息处理的API，开发者从来也没有自己去关心过消息的传递过程，好像一切都是那么自然，像大自然一样自然？在Cocoa里面你再也不用去自己定义WM_COMMAD_XXX这样的宏来标识某个消息，也不用在switch-case里面去对特定的消息做特别的处理。难道是Cocoa里面就没有了消息机制？答案是否定的，只是Apple在设计消息处理的时候采用了一个更加高明的模式，那就是RunLoop。</p>
+
+<h2>2. NSRunLoop工作原理</h2>
+
+<p>接下来看一下NSRunLoop具体的工作原理，首先是官方文档提供的说法，看图：</p>
+
+<p><a class="fancybox" href="/myimages/NSRunLoop-Infrastructure.png"><img src="/myimages/NSRunLoop-Infrastructure.png"></a></p>
+
+<p>通过所有的“消息”都被添加到了NSRunLoop中去，而在这里这些消息并分为“input source”和“Timer source” 并在循环中检查是不是有事件需要发生，如果需要那么就调用相应的函数处理。为了更清晰的解释，我们来对比VC++和iOS消息处理过程。</p>
+
+<p>VC++中在一切初始化都完成之后程序就开始这样一个循环了（代码是从户sir mfc程序设计课程的slides中截取）：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">int</span> <span class="n">APIENTRY</span> <span class="nf">WinMain</span><span class="p">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="p">,</span><span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="p">,</span><span class="n">LPSTR</span>  <span class="n">lpCmdLine</span><span class="p">,</span><span class="kt">int</span>   <span class="n">nCmdShow</span><span class="p">){</span>
+</span><span class='line'><span class="p">...</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">while</span> <span class="p">(</span><span class="n">GetMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">amp</span><span class="p">;</span><span class="n">msg</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)){</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">TranslateAccelerator</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">hwnd</span><span class="p">,</span> <span class="n">hAccelTable</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">amp</span><span class="p">;</span><span class="n">msg</span><span class="p">)){</span>
+</span><span class='line'>        <span class="n">TranslateMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">amp</span><span class="p">;</span><span class="n">msg</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">DispatchMessage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">amp</span><span class="p">;</span><span class="n">msg</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>可以看到在GetMessage之后就去分发处理消息了，而iOS中main函数中只是调用了UIApplicationMain，那么我们可以介意猜出UIApplicationMain在初始化完成之后就会进入这样一个情形：<br/>
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">int</span> <span class="nf">UIApplicationMain</span><span class="p">(...){</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="p">...</span>
+</span><span class='line'><span class="k">while</span><span class="p">(</span><span class="n">running</span><span class="p">){</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span> <span class="nl">runMode:</span><span class="n">NSDefaultRunLoopMode</span> <span class="nl">beforeDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">distantFuture</span><span class="p">]];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>所以在UIApplicationMain中也是同样在不断处理runloop才是的程序没有退出。刚才的我说了NSRunLoop是一种更加高明的消息处理模式，他就高明在对消息处理过程进行了更好的抽象和封装，这样才能是的你不用处理一些很琐碎很低层次的具体消息的处理，在NSRunLoop中每一个消息就被打包在input source或者是timer source中了，当需要处理的时候就直接调用其中包含的相应对象的处理函数了。所以对外部的开发人员来讲，你感受到的就是，把source/timer加入到runloop中，然后在适当的时候类似于[receiver action]这样的事情发生了。甚至很多时候，你都没有感受到整个过程前半部分，你只是感觉到了你的某个对象的某个函数调用了。比如在UIView被触摸时会用touchesBegan/touchesMoved等等函数被调用，也许你会想，“该死的，我都不知道在那里被告知有触摸消息，这些处理函数就被调用了！？”所以，消息是有的，只是runloop已经帮你做了！为了证明我的观点，我截取了一张debug touchesBegan的call stack，有图有真相：</p>
+
+<p><a class="fancybox" href="/myimages/runloop-callstack.png"><img src="/myimages/runloop-callstack.png"></a></p>
+
+<p>现在会过头来看看刚才的那个会“暂停”代码的例子，有没有更加深入的认识了呢？</p>
+]]></content>
+  </entry>
+  
+</feed>

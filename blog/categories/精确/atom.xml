@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 精确 | 本]]></title>
+  <link href="http://vagase.github.com/blog/categories/精确/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[如何自己动手做timer]]></title>
+    <link href="http://vagase.github.com/blog/how-to-make-timer"/>
+    <updated>2010-11-16T00:00:00+08:00</updated>
+    <id>http://vagase.github.com/blog/how-to-make-timer</id>
+    <content type="html"><![CDATA[<p>有点标题党，最近在看开源游戏库<a href="http://www.libsdl.org">SDL</a>，只是因为要用到其中的thread和timer这些东西，所以就顺便看了看源代码，发现timer很精悍，所以分享其中的带代码。</p>
+
+<p>1.首先通过init函数创建一个timer自己的thread（暂且叫timer线程），所以在使用timer之前一点要先调用init函数。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">int</span> <span class="nf">SDL_SYS_TimerInit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">timer_alive</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">timer</span> <span class="o">=</span> <span class="n">SDL_CreateThread</span><span class="p">(</span><span class="n">RunTimer</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">timer</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span> <span class="p">(</span><span class="n">SDL_SetTimerThreaded</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">static</span> <span class="kt">int</span> <span class="n">RunTimer</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">unused</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">while</span> <span class="p">(</span><span class="n">timer_alive</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">SDL_timer_running</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">SDL_ThreadedTimerCheck</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">SDL_Delay</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<!-- More -->
+
+
+<p>2.添加一个timer, 新建一个维护timer信息的内部struct，并讲这个struct添加到维护有所有在running的timer链表中去。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="k">static</span> <span class="n">SDL_TimerID</span> <span class="nf">SDL_AddTimerInternal</span><span class="p">(</span><span class="n">Uint32</span> <span class="n">interval</span><span class="p">,</span> <span class="n">SDL_NewTimerCallback</span> <span class="n">callback</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">param</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">SDL_TimerID</span> <span class="n">t</span><span class="p">;</span>
+</span><span class='line'><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">SDL_TimerID</span><span class="p">)</span> <span class="n">SDL_malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">_SDL_TimerID</span><span class="p">));</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">interval</span> <span class="o">=</span> <span class="n">ROUND_RESOLUTION</span><span class="p">(</span><span class="n">interval</span><span class="p">);</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">cb</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">param</span> <span class="o">=</span> <span class="n">param</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">last_alarm</span> <span class="o">=</span> <span class="n">SDL_GetTicks</span><span class="p">();</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">next</span> <span class="o">=</span> <span class="n">SDL_timers</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">SDL_timers</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+</span><span class='line'>    <span class="o">++</span><span class="n">SDL_timer_running</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">list_changed</span> <span class="o">=</span> <span class="n">SDL_TRUE</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifdef</span> <span class="n">DEBUG_TIMERS</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;SDL_AddTimer(%d) = %08x num_timers = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="p">(</span><span class="n">Uint32</span><span class="p">)</span> <span class="n">t</span><span class="p">,</span>
+</span><span class='line'>       <span class="n">SDL_timer_running</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">t</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>3.timer线程的唯一工作就是不断地去更新timer的ticks,当发现timer的ticks满足interval的时候就触发timer并讲这个timer从链表中移出。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+</pre></td><td class='code'><pre><code class='c'><span class='line'><span class="kt">void</span> <span class="nf">SDL_ThreadedTimerCheck</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">Uint32</span> <span class="n">now</span><span class="p">,</span> <span class="n">ms</span><span class="p">;</span>
+</span><span class='line'><span class="n">SDL_TimerID</span> <span class="n">t</span><span class="p">,</span> <span class="n">prev</span><span class="p">,</span> <span class="n">next</span><span class="p">;</span>
+</span><span class='line'><span class="n">SDL_bool</span> <span class="n">removed</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">SDL_mutexP</span><span class="p">(</span><span class="n">SDL_timer_mutex</span><span class="p">);</span>
+</span><span class='line'><span class="n">list_changed</span> <span class="o">=</span> <span class="n">SDL_FALSE</span><span class="p">;</span>
+</span><span class='line'><span class="n">now</span> <span class="o">=</span> <span class="n">SDL_GetTicks</span><span class="p">();</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">prev</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">SDL_timers</span><span class="p">;</span> <span class="n">t</span><span class="p">;</span> <span class="n">t</span> <span class="o">=</span> <span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">removed</span> <span class="o">=</span> <span class="n">SDL_FALSE</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">ms</span> <span class="o">=</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">interval</span> <span class="o">-</span> <span class="n">SDL_TIMESLICE</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">next</span> <span class="o">=</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">next</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">last_alarm</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">ms</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="k">struct</span> <span class="n">_SDL_TimerID</span> <span class="n">timer</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="p">((</span><span class="n">now</span> <span class="o">-</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">last_alarm</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">interval</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">last_alarm</span> <span class="o">+=</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">interval</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">last_alarm</span> <span class="o">=</span> <span class="n">now</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifdef</span> <span class="n">DEBUG_TIMERS</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Executing timer %p (thread = %lu)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">SDL_ThreadID</span><span class="p">());</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>        <span class="n">timer</span> <span class="o">=</span> <span class="o">*</span><span class="n">t</span><span class="p">;</span>
+</span><span class='line'>        <span class="n">SDL_mutexV</span><span class="p">(</span><span class="n">SDL_timer_mutex</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">ms</span> <span class="o">=</span> <span class="n">timer</span><span class="p">.</span><span class="n">cb</span><span class="p">(</span><span class="n">timer</span><span class="p">.</span><span class="n">interval</span><span class="p">,</span> <span class="n">timer</span><span class="p">.</span><span class="n">param</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">SDL_mutexP</span><span class="p">(</span><span class="n">SDL_timer_mutex</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">list_changed</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="cm">/* Abort, list of timers modified */</span>
+</span><span class='line'>            <span class="cm">/* FIXME: what if ms was changed? */</span>
+</span><span class='line'>            <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="n">ms</span> <span class="o">!=</span> <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">interval</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="n">ms</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="n">t</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">interval</span> <span class="o">=</span> <span class="n">ROUND_RESOLUTION</span><span class="p">(</span><span class="n">ms</span><span class="p">);</span>
+</span><span class='line'>            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>                <span class="cm">/* Remove timer from the list */</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifdef</span> <span class="n">DEBUG_TIMERS</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;SDL: Removing timer %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                <span class="k">if</span> <span class="p">(</span><span class="n">prev</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="n">prev</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">next</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="n">SDL_timers</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>                <span class="n">SDL_free</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+</span><span class='line'>                <span class="o">--</span><span class="n">SDL_timer_running</span><span class="p">;</span>
+</span><span class='line'>                <span class="n">removed</span> <span class="o">=</span> <span class="n">SDL_TRUE</span><span class="p">;</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="cm">/* Don&#39;t update prev if the timer has disappeared */</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">removed</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">prev</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="n">SDL_mutexV</span><span class="p">(</span><span class="n">SDL_timer_mutex</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这个过程也阐述了timer的基本工作原理，所以也证明了timer不能用来作为精确控制，而且在SDL里面timer只能最多精确到10ms。
+并且联系这个过程可以联想到Cocoa中的NSTimer，其实NSTimer也是这样被添加到NSRunloop中，然后到时间后就触发。</p>
+]]></content>
+  </entry>
+  
+</feed>

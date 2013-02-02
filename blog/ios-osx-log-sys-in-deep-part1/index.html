@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>iOS and Mac OS 调试信息输出（一） - 本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="调试信息输出方法介绍 在Apple Tech Note TN2239：iOS Debugging Magic中提到了程序开发中Debug output 方法： NSLog
+stderr
+system log 调试信息的输出主要有方式，一是通过输出到终端输出，二是输出到日志系统。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.github.com/blog/ios-osx-log-sys-in-deep-part1">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- Add jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+<!-- Optionally add helpers - button, thumbnail and/or media -->
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".fancybox").fancybox();
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8017622-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iOS and Mac OS 调试信息输出（一）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-03-13T00:00:00+08:00" pubdate data-updated="true">Mar 13<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>调试信息输出方法介绍</h2>
+
+<p>在Apple <a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">Tech Note TN2239：iOS Debugging Magic</a>中提到了程序开发中Debug output 方法：</p>
+
+<ol>
+<li>NSLog</li>
+<li>stderr</li>
+<li>system log</li>
+</ol>
+
+
+<p>调试信息的输出主要有方式，一是通过输出到终端输出，二是输出到日志系统。下面讲介绍一下这几种输出调试信息的方式，首先从stderr说起。</p>
+
+<h4>1. stderr （引用自TN2239）</h4>
+
+<blockquote><p>Many programs, and indeed many system frameworks, print debugging messages to stderr. The destination for this output is ultimately controlled by the program: it can redirect stderr to whatever destination it chooses. However, in most cases a program does not redirect stderr, so the output goes to the default destination inherited by the program from its launch environment. This is typically one of the following:</p></blockquote>
+
+<!-- More -->
+
+
+<blockquote><ol>
+<li><p>If you launch a GUI application as it would be launched by a normal user, the system redirects any messages printed on stderr to the system log. You can view these messages using the techniques described earlier.</p></li>
+<li><p>If you run a program from within Xcode, you can see its stderr output in Xcode&#8217;s debugger Console window (choose the Console menu item from the Run menu to see this window).</p></li>
+</ol>
+
+
+<p>Attaching to a running program (using Xcode&#8217;s Attach to Process menu, or the attach command in GDB) does not automatically connect the program&#8217;s stderr to your GDB window. You can do this from within GDB using the trick described in the &#8220;Seeing stdout and stderr After Attaching&#8221; section of Technical Note <a href="http://developer.apple.com/technotes/tn/tn2030.html">TN2030</a>, &#8216;GDB for MacsBug Veterans&#8217;.</p></blockquote>
+
+<p>这样一段代码在真机上跑：</p>
+
+<p><code>NSLog(@"This is message from NSLog");</code><br/>
+<code>fprintf(stderr, "This is message from stderr\n");</code></p>
+
+<p>1）如果是通过Xcode调试加载运行这个程序，那么</p>
+
+<p>在xcode的console中打印如下： <br/>
+<code>2011-03-12 18:52:26.948 Test86[7891:307] This is message from NSLog</code><br/>
+<code>This is message from stderr</code><br/>
+在iPhone的system log中（通过Organizer的console查看）只打印:<br/>
+<code>Sat Mar 12 18:52:26 unknown Test86[7891] &amp;lt;Warning&amp;gt;: This is message from NSLog</code></p>
+
+<p>2）但是如果在iPhone上通过手指触摸启动这个程序，在iPhone的system log中会打印：<br/>
+<code>Sat Mar 12 18:53:38 unknown Test86[7900] &amp;lt;Warning&amp;gt;: This is message from NSLog</code><br/>
+<code>Sat Mar 12 18:53:38 unknown UIKitApplication:com.yourcompany.Test86[0x7d60][7900] &amp;lt;Notice&amp;gt;: This is message from stderr</code></p>
+
+<p>说明确实stderr在user 自己launch的app中被重定向为system log，而且log的等级为Notice；NSLog的等级为Warning。</p>
+
+<h4>2. system log</h4>
+
+<p>其实system log是unix系统都有采用syslog协议的一个日志系统（<a href="http://tools.ietf.org/html/rfc5424">RFC详细讲解了这种协议</a>）。<br/>
+每条日志是有等级的，主要分为如下等级：</p>
+
+<ul>
+<li>Level 0 – “Emergency”</li>
+<li>Level 1 – “Alert”</li>
+<li>Level 2 – “Critical”</li>
+<li>Level 3 – “Error”</li>
+<li>Level 4 – “Warning”</li>
+<li>Level 5 – “Notice”</li>
+<li>Level 6 – “Info”</li>
+<li>Level 7 – “Debug”</li>
+</ul>
+
+
+<p>在创建好日志之后，通过调用API发送日志信息给一个叫做syslogd的守护进程，然后syslogd根据自己的配置文件（位于<code>/private/etc/syslog.conf</code>, <a href="http://study.chyangwa.com/IT/AIX/aixcmds5/syslogd.htm">具体怎么配置这篇文章说得很详细</a>），最后讲日志保存早自己的系统日志“数据库”里面。有兴趣的可以去打卡这个syslog.conf文件看看，我Mac上的配置文件是这样的：</p>
+
+<p><code>*.notice;authpriv,remoteauth,ftp,install,internal.none     /var/log/system.log</code>（此处省去若干字。。。）</p>
+
+<p>其中<code>*.notice</code>指明了任何等级比notice高的等级都要录入到 <code>/var/log/system.log</code> 这个文件中去。</p>
+
+<p>在mac os和ios那么怎样调用  API讲日志发送给系统日志呢？有两种API：</p>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/syslog.3.html#//apple_ref/doc/man/3/syslog">syslog API（不要和之前syslog协议混淆</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/System/Conceptual/ManPages_iPhoneOS/man3/asl.3.html">ASL: Apple System Log facility</a> 是苹果自己实现的一种可以同syslogd服务器交互，用来替换syslog API的实现。</li>
+</ul>
+
+
+<p>这里还有一些讲Syslog不错的文章,：</p>
+
+<ul>
+<li><a href="http://www.cocoanetics.com/2011/03/accessing-the-ios-system-log/">&#8220;Accesing the iOS system log&#8221;</a></li>
+</ul>
+
+
+<h4>3. NSLog</h4>
+
+<p>NSLog应该是我们最熟悉的方式，其实也应该是每一个学习Objective C第一句会的语法，然后你对它真正了解多少？NSLog顾名思义，出去namespace NS 就是Log，其主要的功能就是为Cocoa程序编写人员提供一种简单的输入日志的方式。但是我们很多时候都讲其误认为是printf，而且也只是当printf用。如果是这样就太可惜了。</p>
+
+<blockquote><p>NSLog is a high-level API for logging which is used extensively by Objective-C code. The exact behaviour of NSLog is surprisingly complex, and has changed significantly over time, making it beyond the scope of this document. However, it&#8217;s sufficient to know that NSLog prints to stderr, or logs to the system log, or both. So, if you understand those two mechanisms, you can see anything logged via NSLog.<a href="http://developer.apple.com/library/ios/#technotes/tn2010/tn2239.html">TN2239</a></p></blockquote>
+
+<p>看见这个surprisingly complex也许就知道NSLog也许没那么简单了，我讲在另外一篇文章中详细讲解NSLog, <a href="http://vagase.github.com/2011/03/13/ios-osx-log-sys-in-deep-part2/">《iOS/Mac OS 调试信息输出（二）之 NSLog没那么简单》</a>。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/asl/'>ASL</a>, <a class='category' href='/blog/categories/apple-system-log-facility/'>Apple System Log facility</a>, <a class='category' href='/blog/categories/debug/'>Debug</a>, <a class='category' href='/blog/categories/nslog/'>NSLog</a>, <a class='category' href='/blog/categories/system-log/'>System Log</a>, <a class='category' href='/blog/categories/tn2239/'>TN2239</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/output/'>output</a>, <a class='category' href='/blog/categories/stderr/'>stderr</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/handle-exc_bad_accesss-with-NSZombieEnabled" title="Previous Post: 用NSZombieEnabled处理EXC_BAD_ACCESS">&laquo; 用NSZombieEnabled处理EXC_BAD_ACCESS</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/ios-osx-log-sys-in-deep-part2" title="next Post: iOS and Mac OS 调试信息输出（二）">iOS and Mac OS 调试信息输出（二） &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

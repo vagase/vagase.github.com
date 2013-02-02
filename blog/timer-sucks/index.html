@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Timer不靠谱 - 本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。 &#8220;NSRunLoop概述和原理&#8221;
+&#8220;如何自己动手做timer&#8221; 我们把环境都设置在Cocoa中，这里所讲的timer就用NStimer， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.github.com/blog/timer-sucks">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- Add jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+<!-- Optionally add helpers - button, thumbnail and/or media -->
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".fancybox").fancybox();
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8017622-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Timer不靠谱</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-12-12T00:00:00+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。</p>
+
+<ul>
+<li><a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">&#8220;NSRunLoop概述和原理&#8221;</a></li>
+<li><a href="http://vagase.github.com/how-to-make-timer/">&#8220;如何自己动手做timer&#8221;</a></li>
+</ul>
+
+
+<p>我们把环境都设置在Cocoa中，这里所讲的timer就用NStimer，当然这里的原理适用于其他系统的timer。</p>
+
+<p>因为NSTimer是作为一种timer resource加入到NSRunLoop中去，在当timer的时间累计到规定时间之后就触发timer的action。从这个过程上看来timer应该是很“准时”的，而且现实情况也是这样的，比如一个规定每1s触发的timer绝大多数情况一般也是1s触发一次。但是timer的这种所谓的“准时”千万不要让你产生这样一种幻觉，“timer可以用来作精确的循环控制，比如用来精准控制动画”。</p>
+
+<!-- More -->
+
+
+<p>timer的不精确性主要是表现在：timer有可能delay或者丢失。具体有下面几种情形：</p>
+
+<ol>
+<li><p>runloop被堵塞了。</p>
+
+<p> timer被加入到runloop中去，如果这个runloop堵塞了，举个例子说就是处理runloop的某个resource花了10S钟，而你的timer是1s触发一次，那么这个时候因为runloop被这个10s的任务所堵塞住了，就没有可能去处理timer了，于是按照<a href="http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Multithreading/Introduction/Introduction.html">“Thread Programming Guide”</a>原文中的说法就是：</p>
+
+<blockquote><p>“if a timer fires when the run loop is in the middle of executing a handler routine, the timer waits until the next time through the run loop to invoke its handler routine. If the run loop is not running at all, the timer never fires.”
+ 所以这种情况下，timer可能被delay甚至是丢失掉。</p></blockquote></li>
+<li><p>runloop没有run或者run的model timer不支持。</p>
+
+<p>加入timer加入的是defaule mode，但是这个时候用户在如<a href="http://vagase.github.com/nsrunloop-in-deep/">“NSRunLoop概述和原理”</a>中第一段代码中，用的是某个用户自己定于的mode在run这个runloop那么timer的计时就没有被累加。之有当runloop的model支持该timer的时候，该timer计时才会累计。</p></li>
+</ol>
+
+
+<p>所以timer只是一种非实时控制的，“粗略”地计时的一种工具，在通常我们对实时不太要求的时候timer满足我们的需求，但是如果对实时要求很高，比如游戏中，就得采取一些真正实时的手段来实现了。这里我想起了很早的时候看过的一份有戏代码，其中的动画效果都是由NSTimer来控制的，当时我就石化了，虽然游戏各种动画都还能看，但是明显不是很流畅，而且时快时慢。</p>
+
+<p>结合上面说的，又会过头看看SDL中对timer的实现就实在是太简陋了，不过这种简单的timer系统有的时候反而能够提供很好的实时性。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/nsrunloop/'>NSRunloop</a>, <a class='category' href='/blog/categories/nstimer/'>NSTimer</a>, <a class='category' href='/blog/categories/run-loop/'>Run Loop</a>, <a class='category' href='/blog/categories/sdl-timer/'>SDL_Timer</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/timer/'>timer</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/nsrunloop-in-deep" title="Previous Post: NSRunLoop概述和原理">&laquo; NSRunLoop概述和原理</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/add-custom-dict-for-mac" title="next Post: 为Mac Dictionary添加中英文翻译傻瓜教程">为Mac Dictionary添加中英文翻译傻瓜教程 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

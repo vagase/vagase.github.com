@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: DictUnifier | 本]]></title>
+  <link href="http://vagase.github.com/blog/categories/dictunifier/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[为Mac Dictionary添加中英文翻译傻瓜教程]]></title>
+    <link href="http://vagase.github.com/blog/add-custom-dict-for-mac"/>
+    <updated>2011-01-28T00:00:00+08:00</updated>
+    <id>http://vagase.github.com/blog/add-custom-dict-for-mac</id>
+    <content type="html"><![CDATA[<p>Dictionary是一个很牛B的东西，但是一直苦于Dictionary只能查看系统自带英文翻译和wiki等等，所以也就一直在用金山辞霸。金山词霸for mac的用户体验你懂的。。。为此一直很内伤。。。</p>
+
+<p>今天google了一把，原来Dictionary是可以添加额外的词典库的。按需添加好很牛B的词典库之后就可以完全抛弃金山词霸了！具体步骤如下：</p>
+
+<ol>
+<li>因为Dictionary原生不支持添加词典，所以要借助一个第三方工具来添加：<a href="http://code.google.com/p/mac-dictionary-kit/downloads/list">DictUnifier</a></li>
+<li>去这里下载你自己想要的词典库：<a href="http://yeelou.com/huzheng/stardict-dic/zh_CN/">http://yeelou.com/huzheng/stardict-dic/zh_CN/</a> （当然也有金山词霸字典库：<a href="http://yeelou.com/huzheng/stardict-dic/PowerWord/">http://yeelou.com/huzheng/stardict-dic/PowerWord/</a>），下载tarball格式。</li>
+<li>下载下来后，直接将这个文件托到刚才的程序中去，然后就等待转换完成... ...提示一下，下载下来的文件是一个压缩包，不要手贱去解压，直接将压缩包拖到DictUnifier去就行了，托进去可能要一点点时间等程序反应一下，耐心等。</li>
+<li>在Dictionary App中选择你要使用的词典库：打开 配置/preference 你就知道该怎么干了。</li>
+</ol>
+
+
+<!-- More -->
+
+
+<p>效果图如下：</p>
+
+<p><a class="fancybox" href="/myimages/dictionary.png"><img src="/myimages/dictionary.png" width="400" height="400"></a></p>
+
+<p>你可以选择Context Menu: Open Dictionary Panel 效果就是这样方便：</p>
+
+<p><a class="fancybox" href="/myimages/dictionary-panel.png"><img src="/myimages/dictionary-panel.png" width="400" height="400"></a></p>
+]]></content>
+  </entry>
+  
+</feed>

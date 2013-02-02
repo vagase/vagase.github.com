@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>模仿UIAlertView，iOS模式对话框 - 本</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="在程序UI设计上，很多情况我们会需要一种模式的对话框来进行操作。现有的iOS提供如下方式满足这种需求: UIAlertView
+UIViewController  : - (void)presentModalViewController:(UIViewController *) &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.github.com/blog/fake-uialertview">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- Add jQuery library -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+<!-- Optionally add helpers - button, thumbnail and/or media -->
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".fancybox").fancybox();
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8017622-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">本</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">模仿UIAlertView，iOS模式对话框</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-11-13T00:00:00+08:00" pubdate data-updated="true">Nov 13<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>在程序UI设计上，很多情况我们会需要一种模式的对话框来进行操作。现有的iOS提供如下方式满足这种需求:</p>
+
+<ul>
+<li>UIAlertView</li>
+<li>UIViewController  : - (void)presentModalViewController:(UIViewController *)modalViewController animated:(BOOL)animated</li>
+</ul>
+
+
+<p>但是这两者明显都有不足，比如说UIAlertView官方只能显示title，message, buttons. 如果想要显示一个帐号密码输入框就不行（虽然网络上有一些程序员通过hack的方式实现了, <a href="http://stackoverflow.com/questions/376104/uitextfield-in-uialertview-on-iphone-how-to-make-it-responsive">http://stackoverflow.com/questions/376104/uitextfield-in-uialertview-on-iphone-how-to-make-it-responsive</a>， 但是现在还是挺费劲的），所以想要随心所欲的在多样化模式对话框的UI界面标准的lib明显不能满足这个需求。于是我就实现了一个可以任意设置界面的模式对话框，叫 BYDialog.在给这个东西命名上，我想找一个好的前缀，但是一直没有更好的想法，所以就自恋地直接用自己的中文名的拼音开头作了前缀。</p>
+
+<!-- More -->
+
+
+<h3>BYDialog核心思想:</h3>
+
+<ul>
+<li>新建一个UIWindow，其windowLevel比UIWindowLevelStatusBar大一点，这样就可以让显示的内容完全覆盖status bar了。</li>
+<li>UIWindow背景透明，然后添加一个拥有灰灰背景图片的UIImageView，暂且加maskview。这样原来的内容就会有像UIAlertView一样的淡化效果，突出显示模式对话框的内容。</li>
+<li>在UIWindow中添加BYDialog(是UIView的subclass)，BYDialog并显示bounce动画效果。</li>
+</ul>
+
+
+<p>这样就能够像UIAlertView一现显示出来了:)</p>
+
+<h3>如何自定义BYDialog用户界面：<em>（具体可以参考TestDialog的实现）</em></h3>
+
+<ul>
+<li>subclass BYDialog, 然后<em>必须</em>改写<code>- (void)loadContentView;</code>，并提供你自己想要显示的UI内容，注意这个内容要适当大小，不要超出屏幕大小。</li>
+<li>override <code>- (void)willPresentDialog;</code> <code>- (void)didPresentDialog;</code> <code>- (void)willDismissDialog;</code> <code>- (void)didDismissDialog;</code>并响应这种事件消息。</li>
+<li>可以为自己的类提供各种delegate函数，根据以上捕捉到的事件消息或者其他地方，触发delegate函数调用。</li>
+</ul>
+
+
+<p>所以整个UIAlertView 模仿过程完成了，效果如截图：</p>
+
+<p><a class="fancybox" href="/myimages/bydialog.png"><img src="/myimages/bydialog.png" width="400" height="400"></a></p>
+
+<hr />
+
+<p><strong>Github: <a href="https://github.com/vagase/BYDialog">https://github.com/vagase/BYDialog</a></strong></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/bydialog/'>BYDialog</a>, <a class='category' href='/blog/categories/uialertview/'>UIAlertView</a>, <a class='category' href='/blog/categories/uiviewcontroller/'>UIViewController</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>, <a class='category' href='/blog/categories/model-dialog/'>model dialog</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/pc-keyboard-switch-command-option-kyes-on-mac" title="Previous Post: PC键盘在Mac下Command/Option键切换">&laquo; PC键盘在Mac下Command/Option键切换</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/how-to-make-timer" title="next Post: 如何自己动手做timer">如何自己动手做timer &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

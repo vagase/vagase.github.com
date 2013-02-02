@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: warning | 本]]></title>
+  <link href="http://vagase.github.com/blog/categories/warning/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[NSLog warning:"format not a string literal and no format arguments"]]></title>
+    <link href="http://vagase.github.com/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments"/>
+    <updated>2010-07-15T00:00:00+08:00</updated>
+    <id>http://vagase.github.com/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments</id>
+    <content type="html"><![CDATA[<p>我觉得这个问题已经烦躁了我很久很久，因为自打我学习Objective c的时候，写这样一句是没有任何问题的：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSString</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;Mimi&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>而如今升级到SnowLeopard，用上Xcode 3.2之后，如果这么写总是会有一个“format not a string literal and no format arguments”另人烦躁的warning, 虽然比较恶心，但是还是看看为什么会有这个warning再说。</p>
+
+<p>其实一切都是为了安全着想，加入你写了下面的一段程序：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">nameFormat</span> <span class="o">=</span> <span class="s">@&quot;%@ %@&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">firstName</span> <span class="o">=</span> <span class="s">@&quot;Jon&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">lastName</span> <span class="o">=</span> <span class="s">@&quot;Hess %@&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="n">nameFormat</span><span class="p">,</span> <span class="n">firstName</span><span class="p">,</span> <span class="n">lastName</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="err">；</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>那么就相当于<br/>
+<code>NSLog(@"Jon Hess %@");</code></p>
+
+<p>这样自然程序运行是有问题的！</p>
+
+<!-- More -->
+
+
+<p>所以为了避免这么无辜而且隐蔽的错误，xcode添加了类型检查。</p>
+
+<p>但是如果你觉得你不需要xcode为你操这些心，方便才是王道的话，你可以在xcode里面将GCC 4.2-Warnings中的Typecheck Calls to printf/scanf选项去掉就可以解决问题：</p>
+
+<p><a class="fancybox" href="/myimages/nslog_type_check.png"><img src="/myimages/nslog_type_check.png" width="400" height="400"></a></p>
+]]></content>
+  </entry>
+  
+</feed>

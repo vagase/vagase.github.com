@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: NSURLConnection | 本]]></title>
+  <link href="http://vagase.github.com/blog/categories/nsurlconnection/atom.xml" rel="self"/>
+  <link href="http://vagase.github.com/"/>
+  <updated>2013-02-02T15:09:48+08:00</updated>
+  <id>http://vagase.github.com/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[NSURLConnection timeout失效问题]]></title>
+    <link href="http://vagase.github.com/blog/nsurlconnection-timeout-issue"/>
+    <updated>2010-05-20T00:00:00+08:00</updated>
+    <id>http://vagase.github.com/blog/nsurlconnection-timeout-issue</id>
+    <content type="html"><![CDATA[<p>今天在编译3.0的程序时候无意中写了这么一段代码：
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSMutableURLRequest</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableURLRequest</span> <span class="nl">requestWithURL:</span><span class="s">@&quot;...&quot;</span> <span class="nl">cachePolicy:</span><span class="n">NSURLRequestReloadIgnoringLocalAndRemoteCacheData</span> <span class="nl">timeoutInterval:</span><span class="mi">15</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSString</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">string</span> <span class="o">=</span> <span class="s">@&quot;FUCK GFW THREE DAYS!&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSData</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">bodyData</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span> <span class="nl">dataUsingEncoding:</span><span class="n">NSUTF8StringEncoding</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setValue:</span><span class="s">@&quot;text/xml; charset=utf-8&quot;</span> <span class="nl">forHTTPHeaderField:</span><span class="s">@&quot;Content-Type&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setValue:</span><span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%u&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">bodyData</span> <span class="n">length</span><span class="p">]]</span> <span class="nl">forHTTPHeaderField:</span><span class="s">@&quot;Content-Length&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setHTTPBody:</span> <span class="n">bodyData</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">request</span> <span class="nl">setHTTPMethod:</span> <span class="s">@&quot;POST&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'><span class="n">NSURLConnection</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">connection</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLConnection</span> <span class="nl">connectionWithRequest:</span><span class="n">request</span> <span class="nl">delegate:</span><span class="n">self</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+結果由于本部龟速的网络导致程序迟迟没有反应，一直处于loading，但是很奇怪的是在15s之后程序仍然没有NSURLConnection fail之類的回调，我测试了一下程序最终在一分多钟以后才返回了，也就是说我们设置的timeout失效了。</p>
+
+<!-- More -->
+
+
+<h3>原因</h3>
+
+<p>这个问题只有在3.0以及之后的os中才有的，而且只有在当调用了setHTTPBody之后才会出现timeout失效。这个是苹果公司对URL Loading System的在OS3.0中的一个改动，不过在我看来其实这就是一个bug！在setHTTPBody之后，request的timeout会被改为240s（这个你可以通过NSLog ［request timeoutInterval］查看），苹果开发人员的解释就是通常我们自己设置的太短的timeout其实是没什么作用的，尤其对移动设备上来讲与网络沟通需要的时间往往是比较长的，假如你的timeout是10s，在WWAN的网络环境下，可能才刚刚“bring WWAN Interface up”（不知道怎么翻译，囧）。所以自从OS 3后，如果设置了HTTP body的data，系统就会自动设置一个最低的timeout值，即240s，而且这个值都是不能被改动的，即是你自己再次设置了timeoutInterval，你通过NSLog ［request timeoutInterval］得到的还是240S！！</p>
+
+<h3>解决方案</h3>
+
+<p>这里我们就可以自己开启一个timer，然后将timer的interval设置为你想设置给connection的timeout，然后在timer的响应selector中讲connection cancel掉，这样就能够像原来一样在timeout之后cancel connection了。如果想同样像以前一样有- (void)connection:(NSURLConnection <em>)connection didFailWithError:(NSError </em>)error这样的回调信息，你自己在timer的selector中手动调用［delegate connection:theConnection didFailWithError: ...］;就可以了，有点tricky，但是很实用。</p>
+
+<p>PS：自己可以看一下的帖子：</p>
+
+<ul>
+<li><a href="https://devforums.apple.com/thread/25282">https://devforums.apple.com/thread/25282</a></li>
+<li><a href="https://devforums.apple.com/message/14845#14845">https://devforums.apple.com/message/14845#14845</a></li>
+<li><a href="https://devforums.apple.com/message/37677">https://devforums.apple.com/message/37677</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
