@@ -2,93 +2,93 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://vagase.me/blog/core-animation-hardware-acceleration</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/nsurlconnection-timeout-issue</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://vagase.me/blog/nslog-warningformat-not-a-string-literal-and-no-format-arguments
         </loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/uiview-with-non-rect-shape</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/nsmanagedobject-property-no-instance-variables-simulation</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/pc-keyboard-switch-command-option-kyes-on-mac</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/fake-uialertview</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/how-to-make-timer</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/nsrunloop-in-deep</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/timer-sucks</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/add-custom-dict-for-mac</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/handle-exc_bad_accesss-with-NSZombieEnabled</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/ios-osx-log-sys-in-deep-part1</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/ios-osx-log-sys-in-deep-part2</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/objective-c-singleton-template</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/convert-json-to-plist</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/steve-jobs-forever</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/ios-io-redirect</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/404.html</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/about/</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/blog/archives/</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
     <url>
         <loc>http://vagase.me/robots.txt</loc>
@@ -96,6 +96,6 @@
     </url>
     <url>
         <loc>http://vagase.me/tags/</loc>
-        <lastmod>2013-02-04T11:14:46+08:00</lastmod>
+        <lastmod>2013-02-22T20:11:06+08:00</lastmod>
     </url>
 </urlset>
