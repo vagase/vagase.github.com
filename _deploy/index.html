@@ -9,7 +9,7 @@
   <meta name="author" content="vagase">
 
   
-  <meta name="description" content="情形描述: 在调试程序的时候，通过NSLog打印log，很方便的就可以在Xcode里面看到。但是程序一旦“离开XCode运行”， 比如将App交付给了公司的测试团队，怎样能够很随意看到NSLog打印的信息呢？通常在离开xcode之后，NSLog的信息会保存在Systemlog里面（ &hellip;">
+  <meta name="description" content="在Objective-C中，所有的[receiver message]都会转换为objc_msgSend(receiver, @selector(message));（Objective-C Runtime）。所以相比c/c++这势必是有性能影响， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -97,6 +97,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/dig-objc-msgsend">深入分析 objc_msgSend</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-02-26T13:35:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在Objective-C中，所有的<code>[receiver message]</code>都会转换为<code>objc_msgSend(receiver, @selector(message));</code>（<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtHowMessagingWorks.html">Objective-C Runtime</a>）。所以相比c/c++这势必是有性能影响，下面就分析objc_msgSend源码看看这个cost到底有多大，并给出在特殊情况下改进方案。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/dig-objc-msgsend">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -559,76 +602,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/timer-sucks">&#8230;&#8230;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/nsrunloop-in-deep">NSRunLoop概述和原理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-12-12T00:00:00+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>1.什么是NSRunLoop？</h2>
-
-<p>我们会经常看到这样的代码：</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">start:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="n">pageStillLoading</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">[</span><span class="n">NSThread</span> <span class="nl">detachNewThreadSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">loadPageInBackground:</span><span class="p">)</span><span class="nl">toTarget:</span><span class="n">self</span> <span class="nl">withObject:</span><span class="nb">nil</span><span class="p">];</span>
-</span><span class='line'>  <span class="p">[</span><span class="n">progress</span> <span class="nl">setHidden:</span><span class="n">NO</span><span class="p">];</span>
-</span><span class='line'>  <span class="k">while</span> <span class="p">(</span><span class="n">pageStillLoading</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="p">[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span> <span class="nl">runMode:</span><span class="n">NSDefaultRunLoopMode</span> <span class="nl">beforeDate:</span><span class="p">[</span><span class="n">NSDate</span> <span class="n">distantFuture</span><span class="p">]];</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="p">[</span><span class="n">progress</span> <span class="nl">setHidden:</span><span class="n">YES</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这段代码很神奇的，因为他会“暂停”代码运行，而且程序运行不会因为这里有一个while循环而受到影响。在[progress setHidden:NO]执行之后，整个函数想暂停了一样停在循环里面，等loadPageInBackground里面的操作都完成了以后才让[progress setHidden:YES]运行。这样做就显得简介，而且逻辑很清晰。如果你不这样做，你就需要在loadPageInBackground里面表示load完成的地方调用[progress setHidden:YES]，显得代码不紧凑而且容易出错。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/nsrunloop-in-deep">&#8230;&#8230;</a>
     </footer>
   
 

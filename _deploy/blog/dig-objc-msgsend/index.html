@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>深入分析 objc_msgSend - 烫烫烫</title>
+  <meta name="author" content="vagase">
+
+  
+  <meta name="description" content="在Objective-C中，所有的[receiver message]都会转换为objc_msgSend(receiver, @selector(message));（Objective-C Runtime）。所以相比c/c++这势必是有性能影响， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://vagase.me/blog/dig-objc-msgsend">
+  <link href="/favicon.ico" rel="icon">
+  
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="烫烫烫" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<!-- Add jQuery library -->
+<script type="text/javascript" src="/fancybox/lib/jquery-1.9.0.min.js"></script>
+
+<!-- Add mousewheel plugin (this is optional) -->
+<script type="text/javascript" src="/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+
+<!-- Add fancyBox -->
+<link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.4" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.4"></script>
+
+<!-- Optionally add helpers - button, thumbnail and/or media -->
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+
+<link rel="stylesheet" href="/fancybox/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" type="text/css" media="screen" />
+<script type="text/javascript" src="/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".fancybox").fancybox();
+  });
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-8017622-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="no-sidebar"  >
+  <header role="banner"><hgroup>
+    <h2><a href="/">烫烫烫</a></h2>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:vagase.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">深入分析 objc_msgSend</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-02-26T13:35:00+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>在Objective-C中，所有的<code>[receiver message]</code>都会转换为<code>objc_msgSend(receiver, @selector(message));</code>（<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtHowMessagingWorks.html">Objective-C Runtime</a>）。所以相比c/c++这势必是有性能影响，下面就分析objc_msgSend源码看看这个cost到底有多大，并给出在特殊情况下改进方案。</p>
+
+<!-- More -->
+
+
+<p>在<a href="http://www.friday.com/bbum/2009/12/18/objc_msgsend-part-1-the-road-map/">「objc_msgSend() Tour」</a> 的系列文章中，已经通过对objc_msgSend汇编源码进行的详细分析，总结出objc_msgSend的处理流程：</p>
+
+<blockquote><ol>
+<li>Check for ignored selectors (GC) and short-circuit.</li>
+<li>Check for nil target.
+
+<ul>
+<li> If nil &amp; nil receiver handler configured, jump to handler</li>
+<li> If nil &amp; no handler (default), cleanup and return.</li>
+</ul>
+</li>
+<li>Search the class’s method cache for the method IMP(use <strong>hash</strong> to find&amp;store method in cache)
+
+<ul>
+<li> If found, jump to it.</li>
+<li> Not found: lookup the method IMP in the class itself corresponding its hierarchy chain.
+
+<ul>
+<li> If found, load it into cache and  jump to it.</li>
+<li> If not found, jump to forwarding mechanism.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+
+<p>在另外一个博客中<a href="http://www.mulle-kybernetik.com/artikel/Optimization/opti-3.html">「Obj-C Optimization：Method and function call innards」</a>通过分析运行时的汇编代码，给出了更加直观的objc_msgSend运行流程。而且该大神在<a href="http://www.mulle-kybernetik.com/artikel/Optimization/opti-9.html">「Obj-C Optimization: The faster objc_msgSend」</a>给出了objc_msgSend实现的c语言版本，这个理解起来就更加容易了：</p>
+
+<div><script src='https://gist.github.com/5037737.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>所以第一次调用某个method的时候，会需要运行500多行指令去寻找method并添加到cache；但是之后只需要运行30多行指令，通过hash方法直接在cache中找到相应method。所以可以认为：「<strong>objc_msgSend的cost大概在30多行指令</strong>」。这个cost是十分小的，对于现代CPU来说毛毛雨都不算，所以不用为objc_msgSend带来的cost操碎了心。</p>
+
+<p>但是即使再微小的cost一旦累计多了，也可能带来很大的耗时，特别是一些常常会被调用的核心代码。所以必要时可以这样优化，通过<code>methodForSelector</code> 直接获得selector的IMP，将Objective-C method转换为c调用。于是我写了个小测试：</p>
+
+<div><script src='https://gist.github.com/5037927.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+<p>测试结果为：Objective-C Call Cost: <em>527.266ms</em>；C Call Cost:<em>330.790ms</em></p>
+
+<p>从上面测试表明，C调用方式比OC调用方式将近快了2倍。如果运行速度成为了程序的瓶颈，采取上面的方法给程序提速不失为一个不错的选择。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/analyze/'>analyze</a>, <a class='category' href='/blog/categories/objc-msgsend/'>objc_msgSend</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ios-io-redirect" title="Previous Post: iOS IO 重定向（NSLog to UITextView）">&laquo; iOS IO 重定向（NSLog to UITextView）</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - vagase
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

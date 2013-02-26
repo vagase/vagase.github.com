@@ -6,4 +6,15 @@ comments: true
 sharing: true
 footer: true
 ---
-「我有许多的秘密，就不告诉你，就不告诉你，就不告诉你！」
+
+<br/>
+<br/>
+<div align='center'>
+<font size=5>
+<a href='http://weibo.com/vagase'>微博</a>   ●  <a href='https://github.com/vagase'>Github</a>   ●  <a href="mailto:xubenyang@gmail.com">Gmail</a>
+</font>
+</div>
+<br/>
+<br/>
+
+
