@@ -6,15 +6,15 @@ comments: true
 sharing: true
 footer: true
 ---
-
 <br/>
+> 真正的Geek，内心有一个纯净如水的科学世界，他们孤僻，但对于俗世人间的浪漫却有含蓄的向往。
 <br/>
 <div align='center'>
-<font size=5>
 <a href='http://weibo.com/vagase'>微博</a>   ●  <a href='https://github.com/vagase'>Github</a>   ●  <a href="mailto:xubenyang@gmail.com">Gmail</a>
-</font>
 </div>
 <br/>
 <br/>
+<br/>
+
 
 
