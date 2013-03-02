@@ -38,3 +38,6 @@ categories:
 测试结果为：Objective-C Call Cost: *527.266ms*；C Call Cost:*330.790ms*
 
 从上面测试表明，C调用方式比OC调用方式将近快了2倍。如果运行速度成为了程序的瓶颈，采取上面的方法给程序提速不失为一个不错的选择。
+
+[更新]
+推荐阅读:[Friday Q&A 2012-11-16: Let's Build objc_msgSend](http://www.mikeash.com/pyblog/friday-qa-2012-11-16-lets-build-objc_msgsend.html)
