@@ -9,18 +9,8 @@
   <meta name="author" content="vagase">
 
   
-  <meta name="description" content="1.什么是NSRunLoop？ 我们会经常看到这样的代码： 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-- (IBAction)start:(id)sender
-{ pageStillLoading = YES; [NSThread detachNewThreadSelector:@selector &hellip;">
+  <meta name="description" content="有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。 &#8220;NSRunLoop概述和原理&#8221;
+&#8220;如何自己动手做timer&#8221; 我们把环境都设置在Cocoa中，这里所讲的timer就用NStimer， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -108,6 +98,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/timer-sucks">Timer不靠谱</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-12-12T00:00:00+08:00" pubdate data-updated="true">Dec 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。</p>
+
+<ul>
+<li><a href="http://vagase.github.com/ios-osx-log-sys-in-deep-part1/">&#8220;NSRunLoop概述和原理&#8221;</a></li>
+<li><a href="http://vagase.github.com/how-to-make-timer/">&#8220;如何自己动手做timer&#8221;</a></li>
+</ul>
+
+
+<p>我们把环境都设置在Cocoa中，这里所讲的timer就用NStimer，当然这里的原理适用于其他系统的timer。</p>
+
+<p>因为NSTimer是作为一种timer resource加入到NSRunLoop中去，在当timer的时间累计到规定时间之后就触发timer的action。从这个过程上看来timer应该是很“准时”的，而且现实情况也是这样的，比如一个规定每1s触发的timer绝大多数情况一般也是1s触发一次。但是timer的这种所谓的“准时”千万不要让你产生这样一种幻觉，“timer可以用来作精确的循环控制，比如用来精准控制动画”。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/timer-sucks">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
