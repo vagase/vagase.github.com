@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Networking | 烫烫烫]]></title>
+  <link href="http://vagase.me/blog/categories/networking/atom.xml" rel="self"/>
+  <link href="http://vagase.me/"/>
+  <updated>2013-03-02T14:50:01+08:00</updated>
+  <id>http://vagase.me/</id>
+  <author>
+    <name><![CDATA[vagase]]></name>
+    <email><![CDATA[xubenyang@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS Network Debugging]]></title>
+    <link href="http://vagase.me/blog/ios-network-debugging"/>
+    <updated>2013-03-02T13:35:00+08:00</updated>
+    <id>http://vagase.me/blog/ios-network-debugging</id>
+    <content type="html"><![CDATA[<p>鉴于用Instruments测试Network比较废柴，网络上不断涌现出更加优秀的解决方案，汇总如下：</p>
+
+<!--More-->
+
+
+<ol>
+<li><p>Proxy<br/>
+Mac插网线上网，然后通过Wifi共享网络给iPhone，在Mac上可以用任何流量监控工具查看iPhone的网络流量。如果查看HTTP协议流量，个人比较喜欢<a href="http://www.tuffcode.com/">HttpScoop</a>；如果还需要查看HTTPS协议，可以使用<a href="" title="http://www.charlesproxy.com/">CharlesProxy</a>，这里有篇很好的教程：<a href="http://blog.cloudfour.com/using-charles-proxy-to-examine-ios-apps/">Using Charles Proxy to examine iOS apps</a></p></li>
+<li><p><a href="http://blog.manbolo.com/2013/02/22/analysing-ios-app-network-performances-on-cellularwifi">RVI(Remote Virtual Interface)</a><br/>
+用RVI的好处就是可以测试iPhone在蜂窝移动数据下的网络情况。</p></li>
+<li><p><a href="http://corner.squareup.com/2012/08/ponydebugger-remote-debugging.html">PonyDebugger</a><br/>
+Square出品，通过浏览器可以测试设备的网络、CoreData、View Hierarchy情况，但是需要在Code中安装PonyDebugger的lib。</p></li>
+<li><p><a href="http://jeffreysambells.com/2012/09/22/network-link-conditioner">iOS 6 Network Link Conditioner</a><br/>
+虽然地球人都知道，但是这玩意儿确实没多大用。</p></li>
+</ol>
+
+
+<p>最后，推荐订阅:<a href="http://iosdevweekly.com/">iOS Dev Weekly</a></p>
+]]></content>
+  </entry>
+  
+</feed>
