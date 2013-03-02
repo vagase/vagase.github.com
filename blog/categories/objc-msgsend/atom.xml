@@ -4,7 +4,7 @@
   <title><![CDATA[Category: objc_msgSend | 烫烫烫]]></title>
   <link href="http://vagase.me/blog/categories/objc-msgsend/atom.xml" rel="self"/>
   <link href="http://vagase.me/"/>
-  <updated>2013-03-02T14:29:54+08:00</updated>
+  <updated>2013-03-02T14:50:01+08:00</updated>
   <id>http://vagase.me/</id>
   <author>
     <name><![CDATA[vagase]]></name>
@@ -67,6 +67,9 @@
 <p>测试结果为：Objective-C Call Cost: <em>527.266ms</em>；C Call Cost:<em>330.790ms</em></p>
 
 <p>从上面测试表明，C调用方式比OC调用方式将近快了2倍。如果运行速度成为了程序的瓶颈，采取上面的方法给程序提速不失为一个不错的选择。</p>
+
+<p>[更新]
+推荐阅读:<a href="http://www.mikeash.com/pyblog/friday-qa-2012-11-16-lets-build-objc_msgsend.html">Friday Q&amp;A 2012-11-16: Let's Build objc_msgSend</a></p>
 ]]></content>
   </entry>
   
