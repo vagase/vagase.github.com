@@ -2,8 +2,8 @@
 layout: page
 title: "关于我"
 date: 2013-02-01 17:26
-comments: true
-sharing: true
+comments: false
+sharing: false
 footer: true
 ---
 <br/>
