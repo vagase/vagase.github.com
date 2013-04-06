@@ -9,8 +9,7 @@
   <meta name="author" content="vagase">
 
   
-  <meta name="description" content="有了这两篇文章作为基础,可以很轻松理解这个问题，timer为什么不是一个精确记时工具，不是实时的。 &#8220;NSRunLoop概述和原理&#8221;
-&#8220;如何自己动手做timer&#8221; 我们把环境都设置在Cocoa中，这里所讲的timer就用NStimer， &hellip;">
+  <meta name="description" content="Dictionary是一个很牛B的东西，但是一直苦于Dictionary只能查看系统自带英文翻译和wiki等等，所以也就一直在用金山辞霸。金山词霸for mac的用户体验你懂的。。。为此一直很内伤。。。 今天google了一把，原来Dictionary是可以添加额外的词典库的。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -98,6 +97,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/add-custom-dict-for-mac">为Mac Dictionary添加中英文翻译傻瓜教程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-01-28T00:00:00+08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2011</time>
+        
+         | <a href="/blog/add-custom-dict-for-mac#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Dictionary是一个很牛B的东西，但是一直苦于Dictionary只能查看系统自带英文翻译和wiki等等，所以也就一直在用金山辞霸。金山词霸for mac的用户体验你懂的。。。为此一直很内伤。。。</p>
+
+<p>今天google了一把，原来Dictionary是可以添加额外的词典库的。按需添加好很牛B的词典库之后就可以完全抛弃金山词霸了！具体步骤如下：</p>
+
+<ol>
+<li>因为Dictionary原生不支持添加词典，所以要借助一个第三方工具来添加：<a href="http://code.google.com/p/mac-dictionary-kit/downloads/list">DictUnifier</a></li>
+<li>去这里下载你自己想要的词典库：<a href="http://yeelou.com/huzheng/stardict-dic/zh_CN/">http://yeelou.com/huzheng/stardict-dic/zh_CN/</a> （当然也有金山词霸字典库：<a href="http://yeelou.com/huzheng/stardict-dic/PowerWord/">http://yeelou.com/huzheng/stardict-dic/PowerWord/</a>），下载tarball格式。</li>
+<li>下载下来后，直接将这个文件托到刚才的程序中去，然后就等待转换完成&#8230; &#8230;提示一下，下载下来的文件是一个压缩包，不要手贱去解压，直接将压缩包拖到DictUnifier去就行了，托进去可能要一点点时间等程序反应一下，耐心等。</li>
+<li>在Dictionary App中选择你要使用的词典库：打开 配置/preference 你就知道该怎么干了。</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/add-custom-dict-for-mac">&#8230;&#8230;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -654,54 +708,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/core-animation-hardware-acceleration">Core Animation硬件加速切身体验</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-05-15T00:00:00+08:00" pubdate data-updated="true">May 15<span>th</span>, 2010</time>
-        
-         | <a href="/blog/core-animation-hardware-acceleration#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一直以来对Core Animation的理解都只是停留在这个技术是用来做动画的。通过CA为什么会得到流畅的动画效果，那是因为Core Animation是提供硬件加速的。然后，就没有然后了。</p>
-
-<p>因为毕设的一部分是做一个iPhone的视频播放器，当然渲染解码出来的数据就是一个问题了。最先用很粗糙的UIImageView通过setImage的方式来呈现每一帧的数据。额的个天啊，虽然视频是播放出来了，但是明显有很卡的感觉！而且如果UIImageView越大，那么越卡，也就是渲染一张图片的时间越长。于是就想到了最坏的打算：用OPENGL来渲染。但是本人一向对非navtive sdk的开发比较反感，因为和系统打交道比较麻烦，所以这只是最坏的打算。于是有投奔CALayer，通过CAlayer的contents来渲染每一帧，结果效果大让人满意，渲染每一帧所花的时间基本上是同UIImageView所需时间的<strong>60%</strong>左右！播放那是非常流畅！</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/core-animation-hardware-acceleration">&#8230;&#8230;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/page/3/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
